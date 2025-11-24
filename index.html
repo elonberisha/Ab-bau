@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="description" content="Bau und Fliesen UG - Professionelle Bau- und Fliesenarbeiten in Petershausen">
+    <title>AB Bau - Bau und Fliesen UG | Professionelle Bauarbeiten</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0066cc',
+                        'primary-dark': '#004499',
+                        'primary-light': '#3399ff',
+                        accent: '#ffd700',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Poppins', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-sans antialiased">
+    
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-white shadow-md transition-all duration-500">
+        <div class="container mx-auto px-3 sm:px-4 lg:px-6 max-w-7xl">
+            <div class="flex items-center justify-between h-16 sm:h-18 lg:h-20">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="index.html" class="flex items-center group">
+                        <img src="logo.svg" alt="AB Bau Logo" class="h-10 sm:h-12 lg:h-14 w-auto transition-transform duration-300 group-hover:scale-105 brightness-0 contrast-100">
+                    </a>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <ul class="hidden lg:flex items-center space-x-1 xl:space-x-2">
+                    <li><a href="about.html" class="nav-link px-4 py-2 text-gray-800 hover:text-primary font-medium text-sm xl:text-base transition-all duration-300 rounded-lg hover:bg-gray-50">
+                        Über uns
+                    </a></li>
+                    <li><a href="services.html" class="nav-link px-4 py-2 text-gray-800 hover:text-primary font-medium text-sm xl:text-base transition-all duration-300 rounded-lg hover:bg-gray-50">
+                        Leistungen
+                    </a></li>
+                    <li><a href="portfolio.html" class="nav-link px-4 py-2 text-gray-800 hover:text-primary font-medium text-sm xl:text-base transition-all duration-300 rounded-lg hover:bg-gray-50">
+                        Portfolio
+                    </a></li>
+                    <li><a href="contact.html" class="nav-link px-4 py-2 text-gray-800 hover:text-primary font-medium text-sm xl:text-base transition-all duration-300 rounded-lg hover:bg-gray-50">
+                        Kontakt
+                    </a></li>
+                    <li class="ml-4"><a href="contact.html" class="bg-gradient-to-r from-primary to-primary-dark text-white px-6 py-3 rounded-xl hover:shadow-xl hover:scale-105 transition-all duration-300 font-semibold text-sm xl:text-base">
+                        Termin vereinbaren
+                    </a></li>
+                </ul>
+                
+                <!-- Mobile Menu Button -->
+                <button id="hamburger" class="lg:hidden flex flex-col space-y-1.5 p-2 z-50 group">
+                    <span class="w-6 h-0.5 bg-gray-800 transition-all duration-300 group-hover:bg-primary"></span>
+                    <span class="w-6 h-0.5 bg-gray-800 transition-all duration-300 group-hover:bg-primary"></span>
+                    <span class="w-6 h-0.5 bg-gray-800 transition-all duration-300 group-hover:bg-primary"></span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden lg:hidden bg-white border-t shadow-2xl fixed top-16 sm:top-18 left-0 right-0 z-40 max-h-0 overflow-hidden transition-all duration-300">
+            <ul class="flex flex-col space-y-1 p-3 sm:p-4">
+                <li><a href="index.html" class="block text-gray-800 hover:text-primary font-medium py-3 px-4 rounded-xl hover:bg-gray-50 transition-all">Home</a></li>
+                <li><a href="about.html" class="block text-gray-800 hover:text-primary font-medium py-3 px-4 rounded-xl hover:bg-gray-50 transition-all">Über uns</a></li>
+                <li><a href="services.html" class="block text-gray-800 hover:text-primary font-medium py-3 px-4 rounded-xl hover:bg-gray-50 transition-all">Leistungen</a></li>
+                <li><a href="portfolio.html" class="block text-gray-800 hover:text-primary font-medium py-3 px-4 rounded-xl hover:bg-gray-50 transition-all">Portfolio</a></li>
+                <li><a href="contact.html" class="block bg-gradient-to-r from-primary to-primary-dark text-white px-6 py-3 rounded-xl text-center font-semibold mt-2">Kontakt</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-stone-900 via-neutral-800 to-slate-900 pt-24 lg:pt-28">
+        <!-- Background Image with Overlay -->
+        <div class="absolute inset-0">
+            <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1920&h=1080&fit=crop" 
+                 alt="Bau und Fliesen Background" 
+                 loading="eager"
+                 class="w-full h-full object-cover opacity-40 scale-110 animate-zoom">
+            <div class="absolute inset-0 bg-gradient-to-br from-stone-900/75 via-neutral-800/65 to-slate-900/75"></div>
+        </div>
+        
+        <!-- Geometric Decorative Elements -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <!-- Sharp Lines Pattern - Vertical -->
+            <div class="absolute top-0 left-0 w-full h-full opacity-15">
+                <div class="absolute top-20 left-10 w-0.5 h-96 bg-gradient-to-b from-stone-300 via-stone-200 to-transparent animate-line-glow"></div>
+                <div class="absolute top-40 right-20 w-0.5 h-80 bg-gradient-to-b from-neutral-200 via-neutral-100 to-transparent animate-line-glow delay-500"></div>
+                <div class="absolute bottom-32 left-1/4 w-0.5 h-72 bg-gradient-to-t from-stone-300 via-stone-200 to-transparent animate-line-glow delay-1000"></div>
+                <div class="absolute top-1/2 right-1/3 w-0.5 h-64 bg-gradient-to-b from-neutral-200 via-neutral-100 to-transparent animate-line-glow delay-300"></div>
+                <div class="absolute top-60 left-1/3 w-0.5 h-56 bg-gradient-to-b from-stone-400 via-stone-300 to-transparent animate-line-glow delay-700"></div>
+            </div>
+            
+            <!-- Sharp Lines Pattern - Horizontal -->
+            <div class="absolute top-0 left-0 w-full h-full opacity-15">
+                <div class="absolute top-32 left-0 w-96 h-0.5 bg-gradient-to-r from-stone-300 via-stone-200 to-transparent animate-line-glow"></div>
+                <div class="absolute bottom-40 right-0 w-80 h-0.5 bg-gradient-to-l from-neutral-200 via-neutral-100 to-transparent animate-line-glow delay-500"></div>
+                <div class="absolute top-1/3 left-1/4 w-64 h-0.5 bg-gradient-to-r from-stone-300 via-stone-200 to-transparent animate-line-glow delay-1000"></div>
+                <div class="absolute bottom-1/3 right-1/4 w-72 h-0.5 bg-gradient-to-l from-neutral-200 via-neutral-100 to-transparent animate-line-glow delay-300"></div>
+            </div>
+            
+            <!-- Geometric Shapes - Squares -->
+            <div class="absolute top-20 right-20 w-32 h-32 border-2 border-stone-400/25 rotate-45 animate-pulse-slow"></div>
+            <div class="absolute bottom-32 left-16 w-24 h-24 border-2 border-neutral-300/25 rotate-12 animate-pulse-slow delay-500"></div>
+            <div class="absolute top-1/3 right-1/4 w-16 h-16 border-2 border-stone-400/20 rotate-45 animate-pulse-slow delay-1000"></div>
+            <div class="absolute bottom-1/4 left-1/3 w-20 h-20 border-2 border-neutral-300/20 rotate-12 animate-pulse-slow delay-300"></div>
+            
+            <!-- Diagonal Sharp Lines -->
+            <div class="absolute top-0 right-0 w-1/2 h-full">
+                <div class="absolute top-1/4 right-1/4 w-96 h-0.5 bg-gradient-to-r from-transparent via-stone-300/25 to-transparent transform rotate-12 animate-line-glow"></div>
+                <div class="absolute bottom-1/4 right-1/3 w-80 h-0.5 bg-gradient-to-r from-transparent via-neutral-200/25 to-transparent transform -rotate-12 animate-line-glow delay-500"></div>
+                <div class="absolute top-1/2 right-1/5 w-72 h-0.5 bg-gradient-to-r from-transparent via-stone-400/20 to-transparent transform rotate-6 animate-line-glow delay-1000"></div>
+            </div>
+            
+            <!-- Tile Pattern Overlay (representing ceramic tiles) -->
+            <div class="absolute inset-0 opacity-8" style="background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px);
+                background-size: 40px 40px;"></div>
+            
+            <!-- Marble Vein Pattern -->
+            <div class="absolute inset-0 opacity-5">
+                <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <pattern id="marble-vein" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+                            <path d="M0,50 Q25,30 50,50 T100,50" stroke="rgba(255,255,255,0.1)" stroke-width="1" fill="none"/>
+                            <path d="M0,30 Q30,20 60,30 T100,30" stroke="rgba(255,255,255,0.08)" stroke-width="0.5" fill="none"/>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#marble-vein)"/>
+                </svg>
+            </div>
+        </div>
+        
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
+            <div class="text-center text-white py-20 sm:py-24 lg:py-32" data-aos="fade-up" data-aos-duration="1200">
+                <div class="inline-flex items-center mb-8 px-5 py-2.5 bg-white/10 backdrop-blur-xl rounded-full border border-white/20 shadow-lg animate-float">
+                    <span class="text-xs sm:text-sm font-semibold text-white tracking-wide">PREMIUM QUALITÄT SEIT 2010</span>
+                </div>
+                <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black mb-6 sm:mb-8 leading-[1.1] px-4">
+                    <span class="block mb-1 sm:mb-2">Präzision</span>
+                    <span class="text-white">meets Perfektion</span>
+                </h1>
+                <p class="text-base sm:text-lg md:text-xl lg:text-2xl font-light mb-8 sm:mb-10 max-w-4xl mx-auto text-white/95 px-4 leading-relaxed">
+                    Spezialisten für <span class="text-white font-semibold">Keramik</span>, <span class="text-white font-semibold">Marmor</span> und <span class="text-white font-semibold">Granit</span>. Professionelle Verlegung und Bearbeitung von Naturstein und Fliesen für Ihr Zuhause.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center items-center px-4">
+                    <a href="#contact" class="group w-full sm:w-auto bg-white text-gray-900 px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg shadow-2xl hover:shadow-white/50 transform hover:-translate-y-1 sm:hover:-translate-y-2 hover:scale-105 transition-all duration-500 flex items-center justify-center space-x-2 sm:space-x-3">
+                        <i class="fas fa-calendar-check text-lg sm:text-xl"></i>
+                        <span>Kostenloses Angebot</span>
+                        <i class="fas fa-arrow-right group-hover:translate-x-2 transition-transform duration-300"></i>
+                    </a>
+                    <a href="#portfolio" class="group w-full sm:w-auto bg-white/10 backdrop-blur-xl text-white border-2 border-white/30 px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg hover:bg-white/20 hover:border-white/50 transform hover:-translate-y-1 sm:hover:-translate-y-2 transition-all duration-500 flex items-center justify-center space-x-2 sm:space-x-3">
+                        <i class="fas fa-images"></i>
+                        <span>Unsere Projekte</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+    </section>
+
+    <!-- Stats Bar -->
+    <section class="bg-white shadow-lg -mt-12 sm:-mt-16 lg:-mt-20 relative z-40">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl py-6 sm:py-8">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+                <div class="text-center" data-aos="fade-up" data-aos-delay="100">
+                    <div class="text-3xl sm:text-4xl md:text-5xl font-black text-primary mb-2">15+</div>
+                    <div class="text-gray-600 font-medium text-sm sm:text-base">Jahre Erfahrung</div>
+                </div>
+                <div class="text-center border-t border-b sm:border-t-0 sm:border-b-0 sm:border-l sm:border-r border-gray-200 py-4 sm:py-0" data-aos="fade-up" data-aos-delay="200">
+                    <div class="text-3xl sm:text-4xl md:text-5xl font-black text-primary mb-2">200+</div>
+                    <div class="text-gray-600 font-medium text-sm sm:text-base">Erfolgreiche Projekte</div>
+                </div>
+                <div class="text-center" data-aos="fade-up" data-aos-delay="300">
+                    <div class="text-3xl sm:text-4xl md:text-5xl font-black text-primary mb-2">100%</div>
+                    <div class="text-gray-600 font-medium text-sm sm:text-base">Zufriedene Kunden</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partners Section -->
+    <section class="py-12 bg-gray-50 border-t border-gray-200">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+            <div class="flex flex-wrap items-center justify-center gap-8 sm:gap-12 opacity-60">
+                <div class="text-2xl font-bold text-gray-400">Partner 1</div>
+                <div class="text-2xl font-bold text-gray-400">Partner 2</div>
+                <div class="text-2xl font-bold text-gray-400">Partner 3</div>
+                <div class="text-2xl font-bold text-gray-400">Partner 4</div>
+                <div class="text-2xl font-bold text-gray-400">Partner 5</div>
+                <div class="text-2xl font-bold text-gray-400">Partner 6</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 sm:py-20 lg:py-24 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+            <div class="grid lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 xl:gap-16 items-center mb-12 sm:mb-14 lg:mb-16">
+                <div data-aos="fade-right" class="space-y-6 sm:space-y-8 order-2 lg:order-1">
+                    <div>
+                        <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
+                            Spezialisten für<br/>
+                            <span class="relative">
+                                <span class="absolute inset-0 bg-primary/20 -rotate-1"></span>
+                                <span class="relative">Keramik, Marmor & Granit</span>
+                            </span><br/>
+                            seit 2010
+                        </h2>
+                        <p class="text-base sm:text-lg text-gray-600 leading-relaxed mb-3 sm:mb-4">
+                            Wir sind spezialisiert auf die professionelle Verlegung und Bearbeitung von Keramik, Marmor und Granit. Mit jahrelanger Erfahrung verwandeln wir Ihre Räume in wahre Meisterwerke.
+                        </p>
+                        <p class="text-base sm:text-lg text-gray-600 leading-relaxed">
+                            Von Badezimmern bis zu Küchen, von Innenräumen bis zu Terrassen - wir verlegen Ihre Fliesen und Natursteine mit höchster Präzision und Qualität.
+                        </p>
+                    </div>
+                    <a href="about.html" class="inline-flex items-center px-5 sm:px-6 py-2.5 sm:py-3 border-2 border-gray-900 rounded-full font-semibold hover:bg-gray-900 hover:text-white transition-all duration-300 text-sm sm:text-base">
+                        Mehr über uns erfahren
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+                
+                <div data-aos="fade-left" class="relative order-1 lg:order-2">
+                    <div class="relative rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl max-w-sm mx-auto lg:max-w-none">
+                        <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=600&h=600&fit=crop" 
+                             alt="Bau und Fliesen Team" 
+                             loading="lazy"
+                             class="w-full h-full object-cover aspect-square">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Stats Section -->
+            <div class="border-t border-gray-200 pt-8 sm:pt-10 lg:pt-12">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
+                    <div class="flex items-center space-x-4 sm:space-x-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gray-900 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-clock text-white text-lg sm:text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="text-3xl sm:text-4xl font-bold text-gray-900 mb-1">72</div>
+                            <div class="text-sm sm:text-base text-gray-600">Stunden Angebotsgarantie</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4 sm:space-x-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gray-900 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-building text-white text-lg sm:text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="text-3xl sm:text-4xl font-bold text-gray-900 mb-1">200+</div>
+                            <div class="text-sm sm:text-base text-gray-600">Projekte realisiert</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4 sm:space-x-6" data-aos="fade-up" data-aos-delay="300">
+                        <div class="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gray-900 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-lightbulb text-white text-lg sm:text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="text-3xl sm:text-4xl font-bold text-gray-900 mb-1">15+</div>
+                            <div class="text-sm sm:text-base text-gray-600">Jahre perfekte Handwerkskunst</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 sm:py-24 lg:py-32 bg-gradient-to-b from-white via-gray-50 to-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+            <div class="text-center mb-12 sm:mb-14 lg:mb-16 xl:mb-20" data-aos="fade-up">
+                <div class="inline-block mb-3 sm:mb-4">
+                    <span class="text-primary font-semibold text-xs sm:text-sm uppercase tracking-wider">Unsere Expertise</span>
+                </div>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-gray-900 mb-4 sm:mb-6 leading-tight px-4">
+                    Premium Materialien,<br class="hidden sm:block"/>
+                    <span class="bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent">Professionelle Verlegung</span>
+                </h2>
+                <p class="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
+                    Wir spezialisieren uns auf die Verlegung und Bearbeitung von hochwertigen Natursteinen und Keramik
+                </p>
+            </div>
+            
+            <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 xl:gap-8">
+                <!-- Service Card 1 -->
+                <div class="group bg-white p-4 sm:p-5 md:p-6 lg:p-8 xl:p-10 rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-primary/20 relative overflow-hidden mx-2 sm:mx-0" data-aos="fade-up" data-aos-delay="100">
+                    <div class="absolute top-0 right-0 w-24 sm:w-32 h-24 sm:h-32 bg-primary/5 rounded-full -mr-12 sm:-mr-16 -mt-12 sm:-mt-16 group-hover:scale-150 transition-transform duration-500"></div>
+                    <div class="relative z-10">
+                        <div class="flex justify-center mb-4 sm:mb-5 lg:mb-6">
+                            <div class="w-full max-w-48 sm:max-w-56 lg:max-w-64 bg-gray-50 p-2.5 sm:p-3 rounded-lg sm:rounded-xl">
+                                <div class="w-full h-28 sm:h-32 lg:h-36 rounded-md sm:rounded-lg overflow-hidden group-hover:scale-105 transition-transform duration-500">
+                                    <img src="kiramika.png" 
+                                         alt="Keramik Fliesen" 
+                                         loading="lazy"
+                                         class="w-full h-full object-contain">
+                                </div>
+                            </div>
+                        </div>
+                        <h3 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">Keramik</h3>
+                        <p class="text-sm sm:text-base text-gray-600 leading-relaxed mb-4 sm:mb-5 lg:mb-6">
+                            Professionelle Verlegung von Keramikfliesen für Bäder, Küchen, Wohnräume und Außenbereiche.
+                        </p>
+                        <ul class="space-y-2 sm:space-y-3 mb-4 sm:mb-5 lg:mb-6">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-primary mt-0.5 sm:mt-1 mr-2 sm:mr-3 flex-shrink-0 text-sm"></i>
+                                <span class="text-sm sm:text-base text-gray-700">Badezimmer und Küchenfliesen</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-primary mt-0.5 sm:mt-1 mr-2 sm:mr-3 flex-shrink-0 text-sm"></i>
+                                <span class="text-sm sm:text-base text-gray-700">Terrasse und Außenbereich</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-primary mt-0.5 sm:mt-1 mr-2 sm:mr-3 flex-shrink-0 text-sm"></i>
+                                <span class="text-sm sm:text-base text-gray-700">Fugenarbeiten und Oberflächenschutz</span>
+                            </li>
+                        </ul>
+                        <a href="services.html" class="inline-flex items-center text-sm sm:text-base text-primary font-semibold group-hover:translate-x-2 transition-transform duration-300">
+                            Mehr erfahren <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Service Card 2 -->
+                <div class="group bg-white p-4 sm:p-5 md:p-6 lg:p-8 xl:p-10 rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-primary/20 relative overflow-hidden mx-2 sm:mx-0" data-aos="fade-up" data-aos-delay="200">
+                    <div class="absolute top-0 right-0 w-24 sm:w-32 h-24 sm:h-32 bg-primary/5 rounded-full -mr-12 sm:-mr-16 -mt-12 sm:-mt-16 group-hover:scale-150 transition-transform duration-500"></div>
+                    <div class="relative z-10">
+                        <div class="flex justify-center mb-4 sm:mb-5 lg:mb-6">
+                            <div class="w-full max-w-48 sm:max-w-56 lg:max-w-64 bg-gray-50 p-2.5 sm:p-3 rounded-lg sm:rounded-xl">
+                                <div class="w-full h-28 sm:h-32 lg:h-36 rounded-md sm:rounded-lg overflow-hidden group-hover:scale-105 transition-transform duration-500">
+                                    <img src="mermeri.png" 
+                                         alt="Marmor" 
+                                         loading="lazy"
+                                         class="w-full h-full object-contain">
+                                </div>
+                            </div>
+                        </div>
+                        <h3 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">Marmor</h3>
+                        <p class="text-sm sm:text-base text-gray-600 leading-relaxed mb-4 sm:mb-5 lg:mb-6">
+                            Verlegung und Bearbeitung von Marmor für Böden, Wände, Treppen und Arbeitsplatten.
+                        </p>
+                        <ul class="space-y-2 sm:space-y-3 mb-4 sm:mb-5 lg:mb-6">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-primary mt-0.5 sm:mt-1 mr-2 sm:mr-3 flex-shrink-0 text-sm"></i>
+                                <span class="text-sm sm:text-base text-gray-700">Marmorböden und -wände</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-primary mt-0.5 sm:mt-1 mr-2 sm:mr-3 flex-shrink-0 text-sm"></i>
+                                <span class="text-sm sm:text-base text-gray-700">Marmorarbeitsplatten für Küchen</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-primary mt-0.5 sm:mt-1 mr-2 sm:mr-3 flex-shrink-0 text-sm"></i>
+                                <span class="text-sm sm:text-base text-gray-700">Polieren und Pflege von Marmor</span>
+                            </li>
+                        </ul>
+                        <a href="services.html" class="inline-flex items-center text-sm sm:text-base text-primary font-semibold group-hover:translate-x-2 transition-transform duration-300">
+                            Mehr erfahren <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Service Card 3 -->
+                <div class="group bg-white p-4 sm:p-5 md:p-6 lg:p-8 xl:p-10 rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-primary/20 relative overflow-hidden md:col-span-2 lg:col-span-1 mx-2 sm:mx-0" data-aos="fade-up" data-aos-delay="300">
+                    <div class="absolute top-0 right-0 w-24 sm:w-32 h-24 sm:h-32 bg-primary/5 rounded-full -mr-12 sm:-mr-16 -mt-12 sm:-mt-16 group-hover:scale-150 transition-transform duration-500"></div>
+                    <div class="relative z-10">
+                        <div class="flex justify-center mb-4 sm:mb-5 lg:mb-6">
+                            <div class="w-full max-w-48 sm:max-w-56 lg:max-w-64 bg-gray-50 p-2.5 sm:p-3 rounded-lg sm:rounded-xl">
+                                <div class="w-full h-28 sm:h-32 lg:h-36 rounded-md sm:rounded-lg overflow-hidden group-hover:scale-105 transition-transform duration-500">
+                                    <img src="graniti.png" 
+                                         alt="Granit" 
+                                         loading="lazy"
+                                         class="w-full h-full object-contain">
+                                </div>
+                            </div>
+                        </div>
+                        <h3 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">Granit</h3>
+                        <p class="text-sm sm:text-base text-gray-600 leading-relaxed mb-4 sm:mb-5 lg:mb-6">
+                            Professionelle Verlegung von Granit für Innen- und Außenbereiche. Robust, langlebig und elegant.
+                        </p>
+                        <ul class="space-y-2 sm:space-y-3 mb-4 sm:mb-5 lg:mb-6">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-primary mt-0.5 sm:mt-1 mr-2 sm:mr-3 flex-shrink-0 text-sm"></i>
+                                <span class="text-sm sm:text-base text-gray-700">Granitböden und -treppen</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-primary mt-0.5 sm:mt-1 mr-2 sm:mr-3 flex-shrink-0 text-sm"></i>
+                                <span class="text-sm sm:text-base text-gray-700">Granitarbeitsplatten</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-primary mt-0.5 sm:mt-1 mr-2 sm:mr-3 flex-shrink-0 text-sm"></i>
+                                <span class="text-sm sm:text-base text-gray-700">Granitfassaden und Außenanlagen</span>
+                            </li>
+                        </ul>
+                        <a href="services.html" class="inline-flex items-center text-sm sm:text-base text-primary font-semibold group-hover:translate-x-2 transition-transform duration-300">
+                            Mehr erfahren <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-16 sm:py-20 lg:py-24 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+            <div class="text-center mb-12 lg:mb-16" data-aos="fade-up">
+                <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">Was Kunden über uns sagen</h2>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 xl:gap-8">
+                <!-- Overall Rating Card -->
+                <div class="bg-white border-2 border-gray-200 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 text-center mx-2 sm:mx-0" data-aos="fade-up" data-aos-delay="100">
+                    <div class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-2 sm:mb-3">4.9</div>
+                    <div class="flex justify-center mb-3 sm:mb-4">
+                        <i class="fas fa-star text-yellow-400 text-sm sm:text-base lg:text-xl"></i>
+                        <i class="fas fa-star text-yellow-400 text-sm sm:text-base lg:text-xl"></i>
+                        <i class="fas fa-star text-yellow-400 text-sm sm:text-base lg:text-xl"></i>
+                        <i class="fas fa-star text-yellow-400 text-sm sm:text-base lg:text-xl"></i>
+                        <i class="fas fa-star text-yellow-400 text-sm sm:text-base lg:text-xl"></i>
+                    </div>
+                    <p class="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-3 lg:mb-4">(50+ Bewertungen)</p>
+                    <p class="text-sm sm:text-base lg:text-lg font-bold text-gray-900">Wo Ideen auf außergewöhnliche Handwerkskunst treffen</p>
+                </div>
+                
+                <!-- Testimonial 1 -->
+                <div class="bg-white border-2 border-gray-200 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 mx-2 sm:mx-0" data-aos="fade-up" data-aos-delay="200">
+                    <div class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-3">4.7</div>
+                    <div class="flex mb-3 sm:mb-4">
+                        <i class="fas fa-star text-yellow-400 text-xs sm:text-sm"></i>
+                        <i class="fas fa-star text-yellow-400 text-xs sm:text-sm"></i>
+                        <i class="fas fa-star text-yellow-400 text-xs sm:text-sm"></i>
+                        <i class="fas fa-star text-yellow-400 text-xs sm:text-sm"></i>
+                        <i class="fas fa-star-half-alt text-yellow-400 text-xs sm:text-sm"></i>
+                    </div>
+                    <p class="text-xs sm:text-sm text-gray-600 mb-4 sm:mb-5 lg:mb-6 leading-relaxed">
+                        "Wir hatten monatelang Probleme mit Qualitätsmängeln. AB Bau hat unsere Renovierung mit präzisen Arbeitsabläufen neu durchgeführt, und unsere Zufriedenheit stieg in 30 Tagen um 40%. Ihr Team hört wirklich zu—kein Ego, nur ergebnisorientierte Arbeit."
+                    </p>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-primary rounded-full flex items-center justify-center text-white font-bold mr-3 sm:mr-4 text-xs sm:text-sm">
+                            TM
+                        </div>
+                        <div>
+                            <div class="font-bold text-gray-900 text-sm sm:text-base">Thomas Müller</div>
+                            <div class="text-gray-600 text-xs sm:text-sm">Geschäftsführer</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 2 -->
+                <div class="bg-white border-2 border-gray-200 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 mx-2 sm:mx-0" data-aos="fade-up" data-aos-delay="300">
+                    <div class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-3">4.9</div>
+                    <div class="flex mb-3 sm:mb-4">
+                        <i class="fas fa-star text-yellow-400 text-xs sm:text-sm"></i>
+                        <i class="fas fa-star text-yellow-400 text-xs sm:text-sm"></i>
+                        <i class="fas fa-star text-yellow-400 text-xs sm:text-sm"></i>
+                        <i class="fas fa-star text-yellow-400 text-xs sm:text-sm"></i>
+                        <i class="fas fa-star text-yellow-400 text-xs sm:text-sm"></i>
+                    </div>
+                    <p class="text-xs sm:text-sm text-gray-600 mb-4 sm:mb-5 lg:mb-6 leading-relaxed">
+                        "Unser altes Bad sah aus wie jedes andere. AB Bau hat uns eine moderne, hochwertige Fliesenverlegung gegeben, die jetzt in unserem ganzen Haus zu sehen ist. Die Qualität stieg um 65% nach der Renovierung—jeden Cent wert."
+                    </p>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-primary rounded-full flex items-center justify-center text-white font-bold mr-3 sm:mr-4 text-xs sm:text-sm">
+                            AS
+                        </div>
+                        <div>
+                            <div class="font-bold text-gray-900 text-sm sm:text-base">Anna Schmidt</div>
+                            <div class="text-gray-600 text-xs sm:text-sm">Hausbesitzerin</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 3 -->
+                <div class="bg-white border-2 border-gray-200 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 mx-2 sm:mx-0 md:col-span-3 lg:col-span-1" data-aos="fade-up" data-aos-delay="400">
+                    <div class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-3">5.0</div>
+                    <div class="flex mb-3 sm:mb-4">
+                        <i class="fas fa-star text-yellow-400 text-xs sm:text-sm"></i>
+                        <i class="fas fa-star text-yellow-400 text-xs sm:text-sm"></i>
+                        <i class="fas fa-star text-yellow-400 text-xs sm:text-sm"></i>
+                        <i class="fas fa-star text-yellow-400 text-xs sm:text-sm"></i>
+                        <i class="fas fa-star text-yellow-400 text-xs sm:text-sm"></i>
+                    </div>
+                    <p class="text-xs sm:text-sm text-gray-600 mb-4 sm:mb-5 lg:mb-6 leading-relaxed">
+                        "Hervorragende Arbeit! Die Fliesenverlegung in unserem Badezimmer ist perfekt. AB Bau hat alles pünktlich und mit höchster Qualität abgeschlossen. Wir können diese Firma nur weiterempfehlen."
+                    </p>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-primary rounded-full flex items-center justify-center text-white font-bold mr-3 sm:mr-4 text-xs sm:text-sm">
+                            MW
+                        </div>
+                        <div>
+                            <div class="font-bold text-gray-900 text-sm sm:text-base">Michael Weber</div>
+                            <div class="text-gray-600 text-xs sm:text-sm">Architekt</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="py-16 sm:py-20 lg:py-24 bg-gray-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+            <div class="text-center mb-12 lg:mb-16" data-aos="fade-up">
+                <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">Unsere Projekte</h2>
+            </div>
+            
+            <!-- Portfolio Grid -->
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-5 xl:gap-6">
+                <div class="group relative rounded-xl sm:rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white mx-2 sm:mx-0" data-aos="fade-up" data-aos-delay="100">
+                    <div class="aspect-[4/3] relative overflow-hidden h-48 sm:h-56 lg:h-64">
+                        <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&h=450&fit=crop" 
+                             alt="Modernes Badezimmer mit Fliesen" 
+                             loading="lazy"
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute top-3 right-3">
+                            <span class="bg-primary text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">Fliesen</span>
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4 sm:p-5 lg:p-6">
+                            <div class="text-white w-full">
+                                <h3 class="text-base sm:text-lg lg:text-xl font-bold mb-2">Modernes Badezimmer</h3>
+                                <p class="text-xs sm:text-sm opacity-90 mb-2">Komplette Renovierung mit hochwertigen Fliesen</p>
+                                <div class="flex items-center text-xs sm:text-sm opacity-80">
+                                    <i class="fas fa-map-marker-alt mr-2"></i>
+                                    <span>Petershausen</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="group relative rounded-xl sm:rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white mx-2 sm:mx-0" data-aos="fade-up" data-aos-delay="200">
+                    <div class="aspect-[4/3] relative overflow-hidden h-48 sm:h-56 lg:h-64">
+                        <img src="https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=600&h=450&fit=crop" 
+                             alt="Küchenrenovierung mit modernen Fliesen" 
+                             loading="lazy"
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute top-3 right-3">
+                            <span class="bg-primary text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">Fliesen</span>
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4 sm:p-5 lg:p-6">
+                            <div class="text-white w-full">
+                                <h3 class="text-base sm:text-lg lg:text-xl font-bold mb-2">Küchenrenovierung</h3>
+                                <p class="text-xs sm:text-sm opacity-90 mb-2">Moderne Fliesenverlegung und Gestaltung</p>
+                                <div class="flex items-center text-xs sm:text-sm opacity-80">
+                                    <i class="fas fa-map-marker-alt mr-2"></i>
+                                    <span>Petershausen</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="group relative rounded-xl sm:rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white mx-2 sm:mx-0" data-aos="fade-up" data-aos-delay="300">
+                    <div class="aspect-[4/3] relative overflow-hidden h-48 sm:h-56 lg:h-64">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=450&fit=crop" 
+                             alt="Neubauprojekt Bauarbeiten" 
+                             loading="lazy"
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute top-3 right-3">
+                            <span class="bg-gray-800 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">Bau</span>
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4 sm:p-5 lg:p-6">
+                            <div class="text-white w-full">
+                                <h3 class="text-base sm:text-lg lg:text-xl font-bold mb-2">Neubauprojekt</h3>
+                                <p class="text-xs sm:text-sm opacity-90 mb-2">Von der Planung bis zur Fertigstellung</p>
+                                <div class="flex items-center text-xs sm:text-sm opacity-80">
+                                    <i class="fas fa-map-marker-alt mr-2"></i>
+                                    <span>Petershausen</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="group relative rounded-xl sm:rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white mx-2 sm:mx-0" data-aos="fade-up" data-aos-delay="400">
+                    <div class="aspect-[4/3] relative overflow-hidden h-48 sm:h-56 lg:h-64">
+                        <img src="https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=600&h=450&fit=crop" 
+                             alt="Terrasse und Außenbereich mit Fliesen" 
+                             loading="lazy"
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute top-3 right-3">
+                            <span class="bg-primary text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">Fliesen</span>
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4 sm:p-5 lg:p-6">
+                            <div class="text-white w-full">
+                                <h3 class="text-base sm:text-lg lg:text-xl font-bold mb-2">Außenbereich</h3>
+                                <p class="text-xs sm:text-sm opacity-90 mb-2">Terrasse und Außenanlagen</p>
+                                <div class="flex items-center text-xs sm:text-sm opacity-80">
+                                    <i class="fas fa-map-marker-alt mr-2"></i>
+                                    <span>Petershausen</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="group relative rounded-xl sm:rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white mx-2 sm:mx-0" data-aos="fade-up" data-aos-delay="500">
+                    <div class="aspect-[4/3] relative overflow-hidden h-48 sm:h-56 lg:h-64">
+                        <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=600&h=450&fit=crop" 
+                             alt="Wohnungsrenovierung mit Fliesen" 
+                             loading="lazy"
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute top-3 right-3">
+                            <span class="bg-gray-800 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">Renovierung</span>
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4 sm:p-5 lg:p-6">
+                            <div class="text-white w-full">
+                                <h3 class="text-base sm:text-lg lg:text-xl font-bold mb-2">Wohnungsrenovierung</h3>
+                                <p class="text-xs sm:text-sm opacity-90 mb-2">Komplette Modernisierung</p>
+                                <div class="flex items-center text-xs sm:text-sm opacity-80">
+                                    <i class="fas fa-map-marker-alt mr-2"></i>
+                                    <span>Petershausen</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="group relative rounded-xl sm:rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white mx-2 sm:mx-0" data-aos="fade-up" data-aos-delay="600">
+                    <div class="aspect-[4/3] relative overflow-hidden h-48 sm:h-56 lg:h-64">
+                        <img src="https://images.unsplash.com/photo-1600607688909-db48e0c4e4c0?w=600&h=450&fit=crop" 
+                             alt="Gewerbeobjekt Bauarbeiten" 
+                             loading="lazy"
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute top-3 right-3">
+                            <span class="bg-gray-800 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">Bau</span>
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4 sm:p-5 lg:p-6">
+                            <div class="text-white w-full">
+                                <h3 class="text-base sm:text-lg lg:text-xl font-bold mb-2">Gewerbeobjekt</h3>
+                                <p class="text-xs sm:text-sm opacity-90 mb-2">Professionelle Bauarbeiten</p>
+                                <div class="flex items-center text-xs sm:text-sm opacity-80">
+                                    <i class="fas fa-map-marker-alt mr-2"></i>
+                                    <span>Petershausen</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section class="py-16 sm:py-20 lg:py-24 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+            <div class="text-center mb-12 lg:mb-16" data-aos="fade-up">
+                <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">Unser Baujournal</h2>
+            </div>
+            
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+                <!-- Blog Post 1 -->
+                <div class="bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300" data-aos="fade-up" data-aos-delay="100">
+                    <div class="aspect-video relative overflow-hidden h-40 sm:h-48 lg:h-56">
+                        <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&h=400&fit=crop" 
+                             alt="Bauarbeiten Blog" 
+                             loading="lazy"
+                             class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <div class="p-4 sm:p-5 lg:p-6">
+                        <span class="inline-block px-2 sm:px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-semibold mb-2 sm:mb-3">Bauarbeiten</span>
+                        <h3 class="text-base sm:text-lg lg:text-xl font-bold text-gray-900 mb-2 sm:mb-3 leading-tight">Wie wir Kundenzufriedenheit um 200% mit besserer Qualität steigerten</h3>
+                        <div class="flex items-center text-gray-600 text-xs sm:text-sm">
+                            <i class="fas fa-user-circle mr-1 sm:mr-2 text-xs"></i>
+                            <span>Berat Blakaj</span>
+                            <i class="fas fa-calendar ml-3 sm:ml-4 mr-1 sm:mr-2 text-xs"></i>
+                            <span>23. April 2025</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Blog Post 2 -->
+                <div class="bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300" data-aos="fade-up" data-aos-delay="200">
+                    <div class="aspect-video relative overflow-hidden h-40 sm:h-48 lg:h-56">
+                        <img src="https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=600&h=400&fit=crop" 
+                             alt="Fliesen Blog" 
+                             loading="lazy"
+                             class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <div class="p-4 sm:p-5 lg:p-6">
+                        <span class="inline-block px-2 sm:px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-semibold mb-2 sm:mb-3">Fliesenverlegung</span>
+                        <h3 class="text-base sm:text-lg lg:text-xl font-bold text-gray-900 mb-2 sm:mb-3 leading-tight">Warum Ihre Fliesenfarbe Ihre idealen Kunden vertreibt</h3>
+                        <div class="flex items-center text-gray-600 text-xs sm:text-sm">
+                            <i class="fas fa-user-circle mr-1 sm:mr-2 text-xs"></i>
+                            <span>Berat Blakaj</span>
+                            <i class="fas fa-calendar ml-3 sm:ml-4 mr-1 sm:mr-2 text-xs"></i>
+                            <span>23. April 2025</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Blog Post 3 -->
+                <div class="bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300" data-aos="fade-up" data-aos-delay="300">
+                    <div class="aspect-video relative overflow-hidden h-40 sm:h-48 lg:h-56">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=400&fit=crop" 
+                             alt="Renovierung Blog" 
+                             loading="lazy"
+                             class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <div class="p-4 sm:p-5 lg:p-6">
+                        <span class="inline-block px-2 sm:px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-semibold mb-2 sm:mb-3">Renovierung</span>
+                        <h3 class="text-base sm:text-lg lg:text-xl font-bold text-gray-900 mb-2 sm:mb-3 leading-tight">Renovierung vs. Neubau - Unsere Experten klären auf</h3>
+                        <div class="flex items-center text-gray-600 text-xs sm:text-sm">
+                            <i class="fas fa-user-circle mr-1 sm:mr-2 text-xs"></i>
+                            <span>Berat Blakaj</span>
+                            <i class="fas fa-calendar ml-3 sm:ml-4 mr-1 sm:mr-2 text-xs"></i>
+                            <span>23. April 2025</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section id="reviews" class="py-16 sm:py-20 lg:py-24 bg-gradient-to-b from-gray-50 to-white">
+        <div class="container mx-auto px-3 sm:px-4 lg:px-6 max-w-7xl">
+            <div class="text-center mb-12 sm:mb-14 lg:mb-16" data-aos="fade-up">
+                <div class="inline-block mb-3 sm:mb-4">
+                    <span class="text-primary font-semibold text-xs sm:text-sm uppercase tracking-wider">Kundenbewertungen</span>
+                </div>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 mb-4 sm:mb-6 leading-tight px-2">
+                    Bewerten Sie<br class="hidden sm:block"/>
+                    <span class="bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent">unsere Arbeit</span>
+                </h2>
+                <p class="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-2">
+                    Teilen Sie Ihre Erfahrungen mit anderen Kunden
+                </p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-2xl sm:rounded-3xl shadow-xl p-6 sm:p-8 lg:p-10 border border-gray-100 mx-2 sm:mx-0" data-aos="fade-up">
+                    <div class="mb-6 sm:mb-8">
+                        <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-4">Ihre Bewertung</h3>
+                        <div class="flex items-center space-x-2 mb-6" id="ratingStars">
+                            <button type="button" class="star-rating text-2xl sm:text-3xl text-gray-300 hover:text-yellow-400 transition-colors" data-rating="1">
+                                <i class="far fa-star"></i>
+                            </button>
+                            <button type="button" class="star-rating text-2xl sm:text-3xl text-gray-300 hover:text-yellow-400 transition-colors" data-rating="2">
+                                <i class="far fa-star"></i>
+                            </button>
+                            <button type="button" class="star-rating text-2xl sm:text-3xl text-gray-300 hover:text-yellow-400 transition-colors" data-rating="3">
+                                <i class="far fa-star"></i>
+                            </button>
+                            <button type="button" class="star-rating text-2xl sm:text-3xl text-gray-300 hover:text-yellow-400 transition-colors" data-rating="4">
+                                <i class="far fa-star"></i>
+                            </button>
+                            <button type="button" class="star-rating text-2xl sm:text-3xl text-gray-300 hover:text-yellow-400 transition-colors" data-rating="5">
+                                <i class="far fa-star"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <form id="reviewForm" class="space-y-4 sm:space-y-5">
+                        <div>
+                            <input type="text" id="reviewName" name="name" placeholder="Ihr Name" required
+                                class="w-full px-4 sm:px-5 py-3 sm:py-4 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none transition-colors bg-white text-sm sm:text-base">
+                        </div>
+                        <div>
+                            <textarea id="reviewMessage" name="message" rows="4" placeholder="Ihre Bewertung..." required
+                                class="w-full px-4 sm:px-5 py-3 sm:py-4 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none transition-colors bg-white resize-none text-sm sm:text-base"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2 group">
+                            <span>Bewertung absenden</span>
+                            <i class="fas fa-paper-plane group-hover:translate-x-1 transition-transform"></i>
+                        </button>
+                    </form>
+                    
+                    <div id="reviewSuccess" class="hidden mt-4 p-4 bg-green-50 border border-green-200 rounded-xl text-green-800 text-sm sm:text-base">
+                        <i class="fas fa-check-circle mr-2"></i>
+                        Vielen Dank für Ihre Bewertung!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 sm:py-20 lg:py-24 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+            <div class="text-center mb-12 lg:mb-16" data-aos="fade-up">
+                <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">Lassen Sie uns sprechen</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Wir freuen uns auf Ihre Anfrage</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8 sm:gap-10 lg:gap-12">
+                <!-- Contact Info -->
+                <div class="space-y-4 sm:space-y-6" data-aos="fade-right">
+                    <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8 rounded-2xl text-white shadow-2xl relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-48 h-48 bg-primary/10 rounded-full -mr-24 -mt-24"></div>
+                        <div class="absolute bottom-0 left-0 w-48 h-48 bg-primary-light/10 rounded-full -ml-24 -mb-24"></div>
+                        <div class="relative z-10">
+                            <h3 class="text-2xl font-bold mb-6">Kontaktinformationen</h3>
+                            <div class="space-y-6">
+                                <div class="flex items-start space-x-4">
+                                    <div class="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-map-marker-alt text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold mb-1">Adresse</h4>
+                                        <p class="opacity-90">
+                                            <a href="contact.html" class="hover:underline">Talstraße 3d<br>85238 Petershausen</a>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start space-x-4">
+                                    <div class="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-phone text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold mb-1">Telefon</h4>
+                                        <p class="opacity-90">
+                                            <a href="tel:081379957477" class="hover:underline">08137 9957477</a><br>
+                                            <a href="tel:017655537071" class="hover:underline">017655537071</a>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start space-x-4">
+                                    <div class="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-envelope text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold mb-1">E-Mail</h4>
+                                        <p class="opacity-90">
+                                            <a href="mailto:office@ab-bau.de" class="hover:underline break-all">office@ab-bau.de</a>
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Social Media Icons -->
+                                <div class="flex items-center justify-center sm:justify-start space-x-3 sm:space-x-4 pt-4 mt-6 border-t border-white/20">
+                                    <a href="#" target="_blank" class="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-center text-white hover:shadow-lg hover:scale-110 transition-all duration-300 transform hover:rotate-6" aria-label="Facebook">
+                                        <i class="fab fa-facebook-f text-base sm:text-lg"></i>
+                                    </a>
+                                    <a href="#" target="_blank" class="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-center text-white hover:shadow-lg hover:scale-110 transition-all duration-300 transform hover:rotate-6" aria-label="Instagram">
+                                        <i class="fab fa-instagram text-base sm:text-lg"></i>
+                                    </a>
+                                    <a href="#" target="_blank" class="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-center text-white hover:shadow-lg hover:scale-110 transition-all duration-300 transform hover:rotate-6" aria-label="WhatsApp">
+                                        <i class="fab fa-whatsapp text-base sm:text-lg"></i>
+                                    </a>
+                                    <a href="#" target="_blank" class="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-center text-white hover:shadow-lg hover:scale-110 transition-all duration-300 transform hover:rotate-6" aria-label="Viber">
+                                        <i class="fab fa-viber text-base sm:text-lg"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-6 rounded-xl">
+                        <h4 class="font-bold text-gray-900 mb-4">Projektleitung</h4>
+                        <p class="text-gray-700">Berat Blakaj</p>
+                    </div>
+                </div>
+                
+                <!-- Contact Form -->
+                <div data-aos="fade-left">
+                    <form id="contactForm" class="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
+                        <div class="space-y-6">
+                            <div>
+                                <input type="text" id="name" name="name" placeholder="Ihr Name" required
+                                    class="w-full px-6 py-4 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none transition-colors bg-white">
+                            </div>
+                            <div>
+                                <input type="email" id="email" name="email" placeholder="Ihre E-Mail" required
+                                    class="w-full px-6 py-4 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none transition-colors bg-white">
+                            </div>
+                            <div>
+                                <input type="tel" id="phone" name="phone" placeholder="Ihre Telefonnummer"
+                                    class="w-full px-6 py-4 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none transition-colors bg-white">
+                            </div>
+                            <div>
+                                <textarea id="message" name="message" rows="5" placeholder="Ihre Nachricht" required
+                                    class="w-full px-6 py-4 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none transition-colors bg-white resize-none"></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white px-8 py-4 rounded-lg font-bold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2 group">
+                                <span>Nachricht senden</span>
+                                <i class="fas fa-paper-plane group-hover:translate-x-1 transition-transform"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-white py-12 border-t border-slate-800 relative overflow-hidden">
+        <!-- Background Decorations -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-primary-light/10 rounded-full blur-3xl"></div>
+        <div class="relative z-10">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                    <div>
+                        <div class="flex items-center space-x-3 mb-4">
+                            <a href="index.html" class="flex items-center space-x-3 group">
+                                <img src="logo.svg" alt="AB Bau Logo" class="h-10 sm:h-12 w-auto brightness-0 invert transition-transform duration-300 group-hover:scale-105">
+                                <span class="text-xl font-bold">AB BAU</span>
+                            </a>
+                        </div>
+                        <p class="text-gray-400 text-sm">Professionelle Bau- und Fliesenarbeiten</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold mb-4">Navigation</h4>
+                        <ul class="space-y-2 text-gray-400 text-sm">
+                            <li><a href="index.html" class="hover:text-white transition-colors">Home</a></li>
+                            <li><a href="about.html" class="hover:text-white transition-colors">Über uns</a></li>
+                            <li><a href="services.html" class="hover:text-white transition-colors">Leistungen</a></li>
+                            <li><a href="portfolio.html" class="hover:text-white transition-colors">Portfolio</a></li>
+                            <li><a href="contact.html" class="hover:text-white transition-colors">Kontakt</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-bold mb-4">Kontakt</h4>
+                        <ul class="space-y-2 text-gray-400 text-sm">
+                            <li><a href="contact.html" class="hover:text-white transition-colors">Talstraße 3d</a></li>
+                            <li><a href="contact.html" class="hover:text-white transition-colors">85238 Petershausen</a></li>
+                            <li><a href="tel:081379957477" class="hover:text-white transition-colors break-all">08137 9957477</a></li>
+                            <li><a href="mailto:office@ab-bau.de" class="hover:text-white transition-colors break-all">office@ab-bau.de</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-bold mb-4">Folgen Sie uns</h4>
+                        <div class="flex space-x-4">
+                            <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-primary rounded-lg flex items-center justify-center transition-all transform hover:scale-110 hover:rotate-6">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-primary rounded-lg flex items-center justify-center transition-all transform hover:scale-110 hover:rotate-6">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-primary rounded-lg flex items-center justify-center transition-all transform hover:scale-110 hover:rotate-6">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t border-gray-800 pt-8 text-center text-gray-400 text-sm">
+                    <p>&copy; 2025 AB Bau - Bau und Fliesen UG (haftungsbeschränkt). Alle Rechte vorbehalten.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <!-- AOS Animation -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="js/script.js"></script>
+</body>
+</html>
