@@ -255,18 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Parallax Effect for Hero Section
-window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    const hero = document.querySelector('#home');
-    if (hero && scrolled < window.innerHeight) {
-        const parallaxElements = hero.querySelectorAll('.absolute');
-        parallaxElements.forEach((element, index) => {
-            const speed = 0.5 + (index * 0.1);
-            element.style.transform = `translateY(${scrolled * speed}px)`;
-        });
-    }
-});
+// Parallax Effect for Hero Section - REMOVED to fix glitching issue
 
 // Lazy Loading for Images (if you add real images later)
 if ('IntersectionObserver' in window) {
