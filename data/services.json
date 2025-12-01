@@ -1,0 +1,30 @@
+[
+    {
+        "id": 1,
+        "title": "Keramik",
+        "description": "Professionelle Verlegung von Keramikfliesen",
+        "image": "kiramika.png",
+        "active": true
+    },
+    {
+        "id": 2,
+        "title": "Marmor",
+        "description": "Hochwertige Marmorverlegung und -bearbeitung",
+        "image": "mermeri.png",
+        "active": true
+    },
+    {
+        "id": 3,
+        "title": "Granit",
+        "description": "Präzise Granitverlegung für Innen- und Außenbereiche",
+        "image": "graniti.png",
+        "active": true
+    },
+    {
+        "id": "6926244859526",
+        "title": "nffmh",
+        "description": "sbrh",
+        "image": "uploads\/692621d58e0ad_1764106709.png",
+        "active": true
+    }
+]

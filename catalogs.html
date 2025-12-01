@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="description" content="Produktkataloge - AB Bau | Keramik, Marmor & Granit">
+    <title>Kataloge - AB Bau | Bau und Fliesen UG</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0066cc',
+                        'primary-dark': '#004499',
+                        'primary-light': '#3399ff',
+                        accent: '#ffd700',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Poppins', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-sans antialiased">
+    
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-white shadow-md transition-all duration-500">
+        <div class="container mx-auto px-3 sm:px-4 lg:px-6 max-w-7xl">
+            <div class="flex items-center justify-between h-16 sm:h-18 lg:h-20">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="index.html" class="flex items-center group">
+                        <img src="logo.svg" alt="AB Bau Logo" class="h-10 sm:h-12 lg:h-14 w-auto transition-transform duration-300 group-hover:scale-105 brightness-0 contrast-100">
+                    </a>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <ul class="hidden lg:flex items-center space-x-1 xl:space-x-2">
+                    <li><a href="about.html" class="nav-link px-4 py-2 text-gray-800 hover:text-primary font-medium text-sm xl:text-base transition-all duration-300 rounded-lg hover:bg-gray-50">
+                        Über uns
+                    </a></li>
+                    <li><a href="services.html" class="nav-link px-4 py-2 text-gray-800 hover:text-primary font-medium text-sm xl:text-base transition-all duration-300 rounded-lg hover:bg-gray-50">
+                        Leistungen
+                    </a></li>
+                    <li><a href="portfolio.html" class="nav-link px-4 py-2 text-gray-800 hover:text-primary font-medium text-sm xl:text-base transition-all duration-300 rounded-lg hover:bg-gray-50">
+                        Portfolio
+                    </a></li>
+                    <li><a href="catalogs.html" class="nav-link px-4 py-2 text-gray-800 hover:text-primary font-medium text-sm xl:text-base transition-all duration-300 rounded-lg hover:bg-gray-50 bg-primary/10 text-primary">
+                        Kataloge
+                    </a></li>
+                    <li><a href="contact.html" class="nav-link px-4 py-2 text-gray-800 hover:text-primary font-medium text-sm xl:text-base transition-all duration-300 rounded-lg hover:bg-gray-50">
+                        Kontakt
+                    </a></li>
+                    <li class="ml-4"><a href="contact.html" class="bg-gradient-to-r from-primary to-primary-dark text-white px-6 py-3 rounded-xl hover:shadow-xl hover:scale-105 transition-all duration-300 font-semibold text-sm xl:text-base">
+                        Termin vereinbaren
+                    </a></li>
+                </ul>
+                
+                <!-- Mobile Menu Button -->
+                <button id="hamburger" class="lg:hidden flex flex-col space-y-1.5 p-2 z-50 group">
+                    <span class="w-6 h-0.5 bg-gray-800 transition-all duration-300 group-hover:bg-primary"></span>
+                    <span class="w-6 h-0.5 bg-gray-800 transition-all duration-300 group-hover:bg-primary"></span>
+                    <span class="w-6 h-0.5 bg-gray-800 transition-all duration-300 group-hover:bg-primary"></span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden lg:hidden bg-white border-t shadow-2xl fixed top-16 sm:top-18 left-0 right-0 z-40 max-h-0 overflow-hidden transition-all duration-300">
+            <ul class="flex flex-col space-y-1 p-3 sm:p-4">
+                <li><a href="index.html" class="block text-gray-800 hover:text-primary font-medium py-3 px-4 rounded-xl hover:bg-gray-50 transition-all">Home</a></li>
+                <li><a href="about.html" class="block text-gray-800 hover:text-primary font-medium py-3 px-4 rounded-xl hover:bg-gray-50 transition-all">Über uns</a></li>
+                <li><a href="services.html" class="block text-gray-800 hover:text-primary font-medium py-3 px-4 rounded-xl hover:bg-gray-50 transition-all">Leistungen</a></li>
+                <li><a href="portfolio.html" class="block text-gray-800 hover:text-primary font-medium py-3 px-4 rounded-xl hover:bg-gray-50 transition-all">Portfolio</a></li>
+                <li><a href="catalogs.html" class="block text-gray-800 hover:text-primary font-medium py-3 px-4 rounded-xl hover:bg-gray-50 transition-all bg-primary/10 text-primary">Kataloge</a></li>
+                <li><a href="contact.html" class="block bg-gradient-to-r from-primary to-primary-dark text-white px-6 py-3 rounded-xl text-center font-semibold mt-2">Kontakt</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="relative pt-32 sm:pt-36 lg:pt-40 pb-16 sm:pb-20 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+        <div class="absolute inset-0">
+            <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1920&h=600&fit=crop" 
+                 alt="Catalogs Background" 
+                 loading="eager"
+                 class="w-full h-full object-cover opacity-30">
+            <div class="absolute inset-0 bg-gradient-to-br from-gray-900/80 via-gray-800/70 to-gray-900/80"></div>
+        </div>
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
+            <div class="text-center text-white" data-aos="fade-up">
+                <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6">Produktkataloge</h1>
+                <p class="text-xl sm:text-2xl text-white/90 max-w-3xl mx-auto">Entdecken Sie unsere umfangreiche Auswahl an Keramik, Marmor und Granit</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Catalogs Section -->
+    <section class="py-16 sm:py-20 lg:py-24 bg-gray-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+            <div id="catalogs-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                <!-- Catalogs will be loaded here dynamically -->
+            </div>
+            
+            <div id="catalogs-empty" class="hidden text-center py-12">
+                <i class="fas fa-book text-6xl text-gray-400 mb-4"></i>
+                <p class="text-gray-600 text-lg">Aktuell sind keine Kataloge verfügbar.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 sm:py-16">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <a href="index.html" class="flex items-center mb-4">
+                        <img src="logo.svg" alt="AB Bau Logo" class="h-12 w-auto brightness-0 invert">
+                    </a>
+                    <p class="text-gray-400">Professionelle Bau- und Fliesenarbeiten seit 2010</p>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Kontakt</h3>
+                    <p class="text-gray-400 mb-2">
+                        <i class="fas fa-map-marker-alt mr-2"></i>
+                        <a href="contact.html" class="hover:text-primary transition-colors">Petershausen, Deutschland</a>
+                    </p>
+                    <p class="text-gray-400 mb-2">
+                        <i class="fas fa-phone mr-2"></i>
+                        <a href="tel:+491234567890" class="hover:text-primary transition-colors">+49 123 456 7890</a>
+                    </p>
+                    <p class="text-gray-400">
+                        <i class="fas fa-envelope mr-2"></i>
+                        <a href="mailto:info@abbau.de" class="hover:text-primary transition-colors">info@abbau.de</a>
+                    </p>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="about.html" class="text-gray-400 hover:text-primary transition-colors">Über uns</a></li>
+                        <li><a href="services.html" class="text-gray-400 hover:text-primary transition-colors">Leistungen</a></li>
+                        <li><a href="portfolio.html" class="text-gray-400 hover:text-primary transition-colors">Portfolio</a></li>
+                        <li><a href="catalogs.html" class="text-gray-400 hover:text-primary transition-colors">Kataloge</a></li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-primary transition-colors">Kontakt</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 pt-8 text-center text-gray-400">
+                <p>&copy; <?php echo date('Y'); ?> AB Bau - Bau und Fliesen UG. Alle Rechte vorbehalten.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/admin-api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true
+            });
+            
+            fetchAndRenderCatalogs();
+        });
+    </script>
+</body>
+</html>
+

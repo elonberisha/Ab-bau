@@ -1,0 +1,11 @@
+# Admin Panel Protection
+# Allow PHP files to be accessed
+<FilesMatch "\.(php)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+# Optional: Add IP restrictions if needed
+# Allow from 127.0.0.1
+# Deny from all
+

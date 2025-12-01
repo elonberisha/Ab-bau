@@ -65,6 +65,9 @@
                     <li><a href="portfolio.html" class="nav-link px-4 py-2 text-gray-800 hover:text-primary font-medium text-sm xl:text-base transition-all duration-300 rounded-lg hover:bg-gray-50">
                         Portfolio
                     </a></li>
+                    <li><a href="catalogs.html" class="nav-link px-4 py-2 text-gray-800 hover:text-primary font-medium text-sm xl:text-base transition-all duration-300 rounded-lg hover:bg-gray-50">
+                        Kataloge
+                    </a></li>
                     <li><a href="contact.html" class="nav-link px-4 py-2 text-gray-800 hover:text-primary font-medium text-sm xl:text-base transition-all duration-300 rounded-lg hover:bg-gray-50">
                         Kontakt
                     </a></li>
@@ -89,72 +92,21 @@
                 <li><a href="about.html" class="block text-gray-800 hover:text-primary font-medium py-3 px-4 rounded-xl hover:bg-gray-50 transition-all">Über uns</a></li>
                 <li><a href="services.html" class="block text-gray-800 hover:text-primary font-medium py-3 px-4 rounded-xl hover:bg-gray-50 transition-all">Leistungen</a></li>
                 <li><a href="portfolio.html" class="block text-gray-800 hover:text-primary font-medium py-3 px-4 rounded-xl hover:bg-gray-50 transition-all">Portfolio</a></li>
+                <li><a href="catalogs.html" class="block text-gray-800 hover:text-primary font-medium py-3 px-4 rounded-xl hover:bg-gray-50 transition-all">Kataloge</a></li>
                 <li><a href="contact.html" class="block bg-gradient-to-r from-primary to-primary-dark text-white px-6 py-3 rounded-xl text-center font-semibold mt-2">Kontakt</a></li>
             </ul>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-stone-900 via-neutral-800 to-slate-900 pt-24 lg:pt-28">
-        <!-- Background Image with Overlay -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gray-900 pt-24 lg:pt-28">
+        <!-- Background Image with Simple Overlay -->
         <div class="absolute inset-0">
             <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1920&h=1080&fit=crop" 
                  alt="Bau und Fliesen Background" 
                  loading="eager"
-                 class="w-full h-full object-cover opacity-40">
-            <div class="absolute inset-0 bg-gradient-to-br from-stone-900/75 via-neutral-800/65 to-slate-900/75"></div>
-        </div>
-        
-        <!-- Geometric Decorative Elements -->
-        <div class="absolute inset-0 overflow-hidden pointer-events-none">
-            <!-- Sharp Lines Pattern - Vertical -->
-            <div class="absolute top-0 left-0 w-full h-full opacity-15">
-                <div class="absolute top-20 left-10 w-0.5 h-96 bg-gradient-to-b from-stone-300 via-stone-200 to-transparent"></div>
-                <div class="absolute top-40 right-20 w-0.5 h-80 bg-gradient-to-b from-neutral-200 via-neutral-100 to-transparent"></div>
-                <div class="absolute bottom-32 left-1/4 w-0.5 h-72 bg-gradient-to-t from-stone-300 via-stone-200 to-transparent"></div>
-                <div class="absolute top-1/2 right-1/3 w-0.5 h-64 bg-gradient-to-b from-neutral-200 via-neutral-100 to-transparent"></div>
-                <div class="absolute top-60 left-1/3 w-0.5 h-56 bg-gradient-to-b from-stone-400 via-stone-300 to-transparent"></div>
-            </div>
-            
-            <!-- Sharp Lines Pattern - Horizontal -->
-            <div class="absolute top-0 left-0 w-full h-full opacity-15">
-                <div class="absolute top-32 left-0 w-96 h-0.5 bg-gradient-to-r from-stone-300 via-stone-200 to-transparent"></div>
-                <div class="absolute bottom-40 right-0 w-80 h-0.5 bg-gradient-to-l from-neutral-200 via-neutral-100 to-transparent"></div>
-                <div class="absolute top-1/3 left-1/4 w-64 h-0.5 bg-gradient-to-r from-stone-300 via-stone-200 to-transparent"></div>
-                <div class="absolute bottom-1/3 right-1/4 w-72 h-0.5 bg-gradient-to-l from-neutral-200 via-neutral-100 to-transparent"></div>
-            </div>
-            
-            <!-- Geometric Shapes - Squares -->
-            <div class="absolute top-20 right-20 w-32 h-32 border-2 border-stone-400/25 rotate-45"></div>
-            <div class="absolute bottom-32 left-16 w-24 h-24 border-2 border-neutral-300/25 rotate-12"></div>
-            <div class="absolute top-1/3 right-1/4 w-16 h-16 border-2 border-stone-400/20 rotate-45"></div>
-            <div class="absolute bottom-1/4 left-1/3 w-20 h-20 border-2 border-neutral-300/20 rotate-12"></div>
-            
-            <!-- Diagonal Sharp Lines -->
-            <div class="absolute top-0 right-0 w-1/2 h-full">
-                <div class="absolute top-1/4 right-1/4 w-96 h-0.5 bg-gradient-to-r from-transparent via-stone-300/25 to-transparent transform rotate-12"></div>
-                <div class="absolute bottom-1/4 right-1/3 w-80 h-0.5 bg-gradient-to-r from-transparent via-neutral-200/25 to-transparent transform -rotate-12"></div>
-                <div class="absolute top-1/2 right-1/5 w-72 h-0.5 bg-gradient-to-r from-transparent via-stone-400/20 to-transparent transform rotate-6"></div>
-            </div>
-            
-            <!-- Tile Pattern Overlay (representing ceramic tiles) -->
-            <div class="absolute inset-0 opacity-8" style="background-image: 
-                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px),
-                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px);
-                background-size: 40px 40px;"></div>
-            
-            <!-- Marble Vein Pattern -->
-            <div class="absolute inset-0 opacity-5">
-                <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <pattern id="marble-vein" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-                            <path d="M0,50 Q25,30 50,50 T100,50" stroke="rgba(255,255,255,0.1)" stroke-width="1" fill="none"/>
-                            <path d="M0,30 Q30,20 60,30 T100,30" stroke="rgba(255,255,255,0.08)" stroke-width="0.5" fill="none"/>
-                        </pattern>
-                    </defs>
-                    <rect width="100%" height="100%" fill="url(#marble-vein)"/>
-                </svg>
-            </div>
+                 class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black/40"></div>
         </div>
         
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
@@ -163,21 +115,21 @@
                     <span class="text-xs sm:text-sm font-semibold text-white tracking-wide">PREMIUM QUALITÄT SEIT 2010</span>
                 </div>
                 <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black mb-6 sm:mb-8 leading-[1.1] px-4">
-                    <span class="block mb-1 sm:mb-2">Präzision</span>
-                    <span class="text-white">meets Perfektion</span>
+                    <span class="block mb-1 sm:mb-2">Premium Materialien</span>
+                    <span class="text-white">für Ihr Zuhause</span>
                 </h1>
                 <p class="text-base sm:text-lg md:text-xl lg:text-2xl font-light mb-8 sm:mb-10 max-w-4xl mx-auto text-white/95 px-4 leading-relaxed">
-                    Spezialisten für <span class="text-white font-semibold">Keramik</span>, <span class="text-white font-semibold">Marmor</span> und <span class="text-white font-semibold">Granit</span>. Professionelle Verlegung und Bearbeitung von Naturstein und Fliesen für Ihr Zuhause.
+                    Entdecken Sie unsere umfangreiche Auswahl an <span class="text-white font-semibold">Keramik</span>, <span class="text-white font-semibold">Marmor</span> und <span class="text-white font-semibold">Granit</span>. Professionelle Verlegung und Bearbeitung für perfekte Ergebnisse.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center items-center px-4">
-                    <a href="#contact" class="group w-full sm:w-auto bg-white text-gray-900 px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg shadow-2xl hover:shadow-white/50 transform hover:-translate-y-1 sm:hover:-translate-y-2 hover:scale-105 transition-all duration-500 flex items-center justify-center space-x-2 sm:space-x-3">
-                        <i class="fas fa-calendar-check text-lg sm:text-xl"></i>
-                        <span>Kostenloses Angebot</span>
+                    <a href="catalogs.html" class="group w-full sm:w-auto bg-white text-gray-900 px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg shadow-2xl hover:shadow-white/50 transform hover:-translate-y-1 sm:hover:-translate-y-2 hover:scale-105 transition-all duration-500 flex items-center justify-center space-x-2 sm:space-x-3">
+                        <i class="fas fa-book text-lg sm:text-xl"></i>
+                        <span>Produktkataloge</span>
                         <i class="fas fa-arrow-right group-hover:translate-x-2 transition-transform duration-300"></i>
                     </a>
-                    <a href="#portfolio" class="group w-full sm:w-auto bg-white/10 backdrop-blur-xl text-white border-2 border-white/30 px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg hover:bg-white/20 hover:border-white/50 transform hover:-translate-y-1 sm:hover:-translate-y-2 transition-all duration-500 flex items-center justify-center space-x-2 sm:space-x-3">
-                        <i class="fas fa-images"></i>
-                        <span>Unsere Projekte</span>
+                    <a href="contact.html" class="group w-full sm:w-auto bg-white/10 backdrop-blur-xl text-white border-2 border-white/30 px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg hover:bg-white/20 hover:border-white/50 transform hover:-translate-y-1 sm:hover:-translate-y-2 transition-all duration-500 flex items-center justify-center space-x-2 sm:space-x-3">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>Kostenloses Angebot</span>
                     </a>
                 </div>
             </div>
@@ -522,146 +474,26 @@
         </div>
     </section>
 
-    <!-- Portfolio Section -->
-    <section id="portfolio" class="py-16 sm:py-20 lg:py-24 bg-gray-50">
+    <!-- Catalogs Preview Section -->
+    <section id="catalogs-preview" class="py-16 sm:py-20 lg:py-24 bg-white">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
             <div class="text-center mb-12 lg:mb-16" data-aos="fade-up">
-                <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">Unsere Projekte</h2>
+                <div class="inline-block mb-3 sm:mb-4">
+                    <span class="text-primary font-semibold text-xs sm:text-sm uppercase tracking-wider">Unsere Produktkataloge</span>
+                </div>
+                <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-4">Entdecken Sie unsere Materialien</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Durchstöbern Sie unsere umfangreichen Kataloge mit Premium-Materialien</p>
             </div>
             
-            <!-- Portfolio Grid -->
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-5 xl:gap-6">
-                <div class="group relative rounded-xl sm:rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white mx-2 sm:mx-0" data-aos="fade-up" data-aos-delay="100">
-                    <div class="aspect-[4/3] relative overflow-hidden h-48 sm:h-56 lg:h-64">
-                        <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&h=450&fit=crop" 
-                             alt="Modernes Badezimmer mit Fliesen" 
-                             loading="lazy"
-                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        <div class="absolute top-3 right-3">
-                            <span class="bg-primary text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">Fliesen</span>
-                        </div>
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4 sm:p-5 lg:p-6">
-                            <div class="text-white w-full">
-                                <h3 class="text-base sm:text-lg lg:text-xl font-bold mb-2">Modernes Badezimmer</h3>
-                                <p class="text-xs sm:text-sm opacity-90 mb-2">Komplette Renovierung mit hochwertigen Fliesen</p>
-                                <div class="flex items-center text-xs sm:text-sm opacity-80">
-                                    <i class="fas fa-map-marker-alt mr-2"></i>
-                                    <span>Petershausen</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="group relative rounded-xl sm:rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white mx-2 sm:mx-0" data-aos="fade-up" data-aos-delay="200">
-                    <div class="aspect-[4/3] relative overflow-hidden h-48 sm:h-56 lg:h-64">
-                        <img src="https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=600&h=450&fit=crop" 
-                             alt="Küchenrenovierung mit modernen Fliesen" 
-                             loading="lazy"
-                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        <div class="absolute top-3 right-3">
-                            <span class="bg-primary text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">Fliesen</span>
-                        </div>
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4 sm:p-5 lg:p-6">
-                            <div class="text-white w-full">
-                                <h3 class="text-base sm:text-lg lg:text-xl font-bold mb-2">Küchenrenovierung</h3>
-                                <p class="text-xs sm:text-sm opacity-90 mb-2">Moderne Fliesenverlegung und Gestaltung</p>
-                                <div class="flex items-center text-xs sm:text-sm opacity-80">
-                                    <i class="fas fa-map-marker-alt mr-2"></i>
-                                    <span>Petershausen</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="group relative rounded-xl sm:rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white mx-2 sm:mx-0" data-aos="fade-up" data-aos-delay="300">
-                    <div class="aspect-[4/3] relative overflow-hidden h-48 sm:h-56 lg:h-64">
-                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=450&fit=crop" 
-                             alt="Neubauprojekt Bauarbeiten" 
-                             loading="lazy"
-                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        <div class="absolute top-3 right-3">
-                            <span class="bg-gray-800 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">Bau</span>
-                        </div>
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4 sm:p-5 lg:p-6">
-                            <div class="text-white w-full">
-                                <h3 class="text-base sm:text-lg lg:text-xl font-bold mb-2">Neubauprojekt</h3>
-                                <p class="text-xs sm:text-sm opacity-90 mb-2">Von der Planung bis zur Fertigstellung</p>
-                                <div class="flex items-center text-xs sm:text-sm opacity-80">
-                                    <i class="fas fa-map-marker-alt mr-2"></i>
-                                    <span>Petershausen</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="group relative rounded-xl sm:rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white mx-2 sm:mx-0" data-aos="fade-up" data-aos-delay="400">
-                    <div class="aspect-[4/3] relative overflow-hidden h-48 sm:h-56 lg:h-64">
-                        <img src="https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=600&h=450&fit=crop" 
-                             alt="Terrasse und Außenbereich mit Fliesen" 
-                             loading="lazy"
-                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        <div class="absolute top-3 right-3">
-                            <span class="bg-primary text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">Fliesen</span>
-                        </div>
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4 sm:p-5 lg:p-6">
-                            <div class="text-white w-full">
-                                <h3 class="text-base sm:text-lg lg:text-xl font-bold mb-2">Außenbereich</h3>
-                                <p class="text-xs sm:text-sm opacity-90 mb-2">Terrasse und Außenanlagen</p>
-                                <div class="flex items-center text-xs sm:text-sm opacity-80">
-                                    <i class="fas fa-map-marker-alt mr-2"></i>
-                                    <span>Petershausen</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="group relative rounded-xl sm:rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white mx-2 sm:mx-0" data-aos="fade-up" data-aos-delay="500">
-                    <div class="aspect-[4/3] relative overflow-hidden h-48 sm:h-56 lg:h-64">
-                        <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=600&h=450&fit=crop" 
-                             alt="Wohnungsrenovierung mit Fliesen" 
-                             loading="lazy"
-                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        <div class="absolute top-3 right-3">
-                            <span class="bg-gray-800 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">Renovierung</span>
-                        </div>
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4 sm:p-5 lg:p-6">
-                            <div class="text-white w-full">
-                                <h3 class="text-base sm:text-lg lg:text-xl font-bold mb-2">Wohnungsrenovierung</h3>
-                                <p class="text-xs sm:text-sm opacity-90 mb-2">Komplette Modernisierung</p>
-                                <div class="flex items-center text-xs sm:text-sm opacity-80">
-                                    <i class="fas fa-map-marker-alt mr-2"></i>
-                                    <span>Petershausen</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="group relative rounded-xl sm:rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white mx-2 sm:mx-0" data-aos="fade-up" data-aos-delay="600">
-                    <div class="aspect-[4/3] relative overflow-hidden h-48 sm:h-56 lg:h-64">
-                        <img src="https://images.unsplash.com/photo-1600607688909-db48e0c4e4c0?w=600&h=450&fit=crop" 
-                             alt="Gewerbeobjekt Bauarbeiten" 
-                             loading="lazy"
-                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        <div class="absolute top-3 right-3">
-                            <span class="bg-gray-800 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">Bau</span>
-                        </div>
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4 sm:p-5 lg:p-6">
-                            <div class="text-white w-full">
-                                <h3 class="text-base sm:text-lg lg:text-xl font-bold mb-2">Gewerbeobjekt</h3>
-                                <p class="text-xs sm:text-sm opacity-90 mb-2">Professionelle Bauarbeiten</p>
-                                <div class="flex items-center text-xs sm:text-sm opacity-80">
-                                    <i class="fas fa-map-marker-alt mr-2"></i>
-                                    <span>Petershausen</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div id="catalogs-preview-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-8">
+                <!-- Catalogs will be loaded here dynamically -->
+            </div>
+            
+            <div class="text-center">
+                <a href="catalogs.html" class="inline-flex items-center bg-primary text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 hover:scale-105 transition-all duration-300">
+                    <span>Alle Kataloge anzeigen</span>
+                    <i class="fas fa-arrow-right ml-3"></i>
+                </a>
             </div>
         </div>
     </section>
@@ -972,5 +804,60 @@
     
     <!-- Custom JS -->
     <script src="js/script.js"></script>
+    <script src="js/admin-api.js"></script>
+    
+    <!-- Load Catalogs Preview -->
+    <script>
+        // Load catalogs preview (first 3)
+        async function loadCatalogsPreview() {
+            try {
+                const response = await fetch('api/get-data.php?type=catalogs');
+                const catalogs = await response.json();
+                const previewCatalogs = catalogs.slice(0, 3); // Show first 3
+                const container = document.getElementById('catalogs-preview-grid');
+                
+                if (!container) return;
+                
+                if (previewCatalogs.length === 0) {
+                    container.innerHTML = '<p class="text-gray-500 text-center py-8 col-span-full">Aktuell sind keine Kataloge verfügbar.</p>';
+                    return;
+                }
+                
+                container.innerHTML = previewCatalogs.map((catalog, index) => `
+                    <div class="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group" data-aos="fade-up" data-aos-delay="${index * 100}">
+                        <div class="relative h-64 overflow-hidden">
+                            <img src="${catalog.cover_image}" 
+                                 alt="${catalog.title}" 
+                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute top-4 right-4">
+                                <span class="bg-primary text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
+                                    ${catalog.category}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold text-gray-900 mb-2">${catalog.title}</h3>
+                            <p class="text-gray-600 mb-4">${catalog.description}</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-500">
+                                    <i class="fas fa-box mr-1"></i>
+                                    ${catalog.products ? catalog.products.length : 0} Produkte
+                                </span>
+                                <a href="catalogs.html" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors font-semibold text-sm">
+                                    Anzeigen
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading catalogs preview:', error);
+            }
+        }
+        
+        // Load catalogs preview when page loads
+        document.addEventListener('DOMContentLoaded', loadCatalogsPreview);
+    </script>
+    
 </body>
 </html>
