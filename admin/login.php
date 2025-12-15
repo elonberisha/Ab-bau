@@ -1,4 +1,9 @@
 <?php
+// Start session immediately
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once 'functions.php';
 
 // If already logged in, redirect to dashboard
@@ -10,7 +15,10 @@ if (isLoggedIn()) {
 // Determine View State
 $view = 'login'; // Default
 
-if (isset($_SESSION['2fa_pending'])) {
+// Debug: Check session state
+// error_log('Session 2FA Pending: ' . (isset($_SESSION['2fa_pending']) ? 'Yes' : 'No'));
+
+if (isset($_SESSION['2fa_pending']) && $_SESSION['2fa_pending'] === true) {
     $view = '2fa';
 } elseif (isset($_GET['action']) && $_GET['action'] === 'forgot') {
     $view = 'forgot_email';
@@ -27,14 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Cancel/Reset Action
     if (isset($_POST['action']) && $_POST['action'] === 'cancel') {
-        unset($_SESSION['2fa_pending']);
-        unset($_SESSION['2fa_code']);
-        unset($_SESSION['2fa_expiry']);
-        unset($_SESSION['temp_user']); // Clear temp user
-        unset($_SESSION['reset_step']);
-        unset($_SESSION['reset_otp']);
-        unset($_SESSION['reset_expiry']);
-        unset($_SESSION['reset_user']); // Clear reset user
+        session_unset(); // Clear all session data
+        session_destroy(); // Destroy session
+        session_start(); // Start fresh
         header('Location: login.php');
         exit;
     } 
@@ -42,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Login Step 1: Password Verification
     elseif (isset($_POST['step']) && $_POST['step'] == 1) {
         $username = trim($_POST['username'] ?? '');
-    $password = $_POST['password'] ?? '';
+        $password = $_POST['password'] ?? '';
         
         $user = verifyUserCredentials($username, $password);
         
@@ -62,8 +65,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $msg = "Përshëndetje " . htmlspecialchars($user['username']) . ",\n\nKodi juaj për hyrje në panelin e administrimit është:\n\n" . $otp . "\n\nKy kod skadon në 5 minuta.\n\nNëse nuk keni tentuar të hyni ju, ju lutemi ndryshoni fjalëkalimin menjëherë.";
             $headers = "From: no-reply@ab-bau.de";
             
+            // Try sending email
             @mail($userEmail, $subject, $msg, $headers);
-            // DEBUG: Write to file
+            
+            // Always write to file for backup/local testing
             file_put_contents(__DIR__ . '/last_otp.txt', "User: $username | Code: $otp");
             
             $view = '2fa';
@@ -77,6 +82,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     elseif (isset($_POST['step']) && $_POST['step'] == 2) {
         $userOtp = trim($_POST['otp'] ?? '');
         
+        // Debugging logs
+        // error_log("OTP Submitted: $userOtp");
+        // error_log("Session OTP: " . ($_SESSION['2fa_code'] ?? 'Not Set'));
+        
         if (isset($_SESSION['2fa_code']) && isset($_SESSION['2fa_expiry'])) {
             if (time() > $_SESSION['2fa_expiry']) {
                 $error = 'Kodi ka skaduar! Ju lutemi provoni përsëri.';
@@ -87,27 +96,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $view = 'login';
             } elseif ($userOtp == $_SESSION['2fa_code']) {
                 // Success - Log in the user
-        $_SESSION['admin_logged_in'] = true;
-                $_SESSION['current_user'] = $_SESSION['temp_user']; // Set current user
+                $_SESSION['user_id'] = $_SESSION['temp_user']['id'];
+                $_SESSION['username'] = $_SESSION['temp_user']['username'];
+                $_SESSION['role'] = $_SESSION['temp_user']['role'];
+                $_SESSION['admin_logged_in'] = true; // Legacy support if needed
                 
+                // Cleanup temp session vars
                 unset($_SESSION['2fa_pending']);
                 unset($_SESSION['2fa_code']);
                 unset($_SESSION['2fa_expiry']);
                 unset($_SESSION['temp_user']);
                 
-        header('Location: dashboard.php');
-        exit;
-    } else {
+                // Important: Write session data before redirect
+                session_write_close();
+                
+                header('Location: dashboard.php');
+                exit;
+            } else {
                 $error = 'Kodi i gabuar!';
-                $view = '2fa';
+                $view = '2fa'; // Keep user on 2FA screen
             }
         } else {
             $view = 'login';
-            $error = 'Seanca ka skaduar.';
+            $error = 'Seanca ka skaduar. Ju lutemi provoni përsëri.';
         }
     }
 
-    // --- FORGOT PASSWORD ACTIONS ---
+    // ... (Forgot password logic remains similar) ...
+     // --- FORGOT PASSWORD ACTIONS ---
 
     // Send Reset Code
     elseif (isset($_POST['action']) && $_POST['action'] === 'send_reset') {
@@ -168,16 +184,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $view = 'forgot_new_pass';
         } else {
             if (isset($_SESSION['reset_user'])) {
-                $usernameToReset = $_SESSION['reset_user']['username'];
-                updateUserPassword($usernameToReset, $pass);
-                
-                unset($_SESSION['reset_step']);
-                unset($_SESSION['reset_otp']);
-                unset($_SESSION['reset_expiry']);
-                unset($_SESSION['reset_user']);
-                
-                $view = 'login';
-                $message = 'Fjalëkalimi u ndryshua me sukses. Ju lutemi hyni.';
+                $userId = $_SESSION['reset_user']['id']; // Use ID for update
+                if (updateUserPassword($userId, $pass)) {
+                    unset($_SESSION['reset_step']);
+                    unset($_SESSION['reset_otp']);
+                    unset($_SESSION['reset_expiry']);
+                    unset($_SESSION['reset_user']);
+                    
+                    $view = 'login';
+                    $message = 'Fjalëkalimi u ndryshua me sukses. Ju lutemi hyni.';
+                } else {
+                    $error = 'Gabim gjatë ruajtjes së fjalëkalimit.';
+                    $view = 'forgot_new_pass';
+                }
             } else {
                 $error = 'Gabim i panjohur. Provoni përsëri.';
                 $view = 'login';
@@ -258,7 +277,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="p-8 sm:p-10">
                 <!-- Notifications -->
-        <?php if ($error): ?>
+                <?php if ($error): ?>
                     <div class="bg-red-50/80 backdrop-blur-sm border border-red-200 text-red-600 p-4 rounded-xl mb-6 flex items-start error-shake shadow-sm">
                         <i class="fas fa-exclamation-circle mt-1 mr-3 text-lg flex-shrink-0"></i>
                         <span class="text-sm font-medium"><?php echo htmlspecialchars($error); ?></span>
@@ -269,8 +288,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="bg-blue-50/80 backdrop-blur-sm border border-blue-200 text-blue-600 p-4 rounded-xl mb-6 flex items-start shadow-sm">
                         <i class="fas fa-info-circle mt-1 mr-3 text-lg flex-shrink-0"></i>
                         <span class="text-sm font-medium"><?php echo htmlspecialchars($message); ?></span>
-            </div>
-        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
         
                 <!-- VIEW: LOGIN (Step 1) -->
                 <?php if ($view === 'login'): ?>
@@ -294,9 +313,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="mt-2 text-right">
                                 <a href="?action=forgot" class="text-sm text-primary hover:text-primary-dark font-medium transition-colors">Harruat fjalëkalimin?</a>
                             </div>
-            </div>
+                        </div>
             
-            <button type="submit"
+                        <button type="submit"
                             class="w-full flex justify-center py-3.5 px-4 border border-transparent rounded-xl shadow-lg text-sm font-bold text-white bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transform hover:-translate-y-0.5 transition-all duration-200">
                             Vazhdo <i class="fas fa-arrow-right ml-2 mt-1"></i>
                         </button>
@@ -387,8 +406,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <input type="hidden" name="action" value="cancel">
                         <button class="w-full text-center text-sm text-gray-500 hover:text-gray-700 font-medium transition-colors">
                             <i class="fas fa-times mr-1"></i> Anulo
-            </button>
-        </form>
+                        </button>
+                    </button>
+                </form>
         
                 <!-- VIEW: FORGOT PASSWORD - NEW PASSWORD -->
                 <?php elseif ($view === 'forgot_new_pass'): ?>

@@ -4,359 +4,322 @@ requireLogin();
 
 $message = '';
 $messageType = '';
-$pageTitle = 'About Us';
 
-// Load customization data
-$customization = readJson('customization.json');
-
-// Handle form submission
+// Handle Form Submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $customization['about']['page_hero_image'] = sanitize($_POST['about_page_hero_image'] ?? '');
-    $customization['about']['title'] = sanitize($_POST['about_title'] ?? '');
-    $customization['about']['description1'] = sanitize($_POST['about_description1'] ?? '');
-    $customization['about']['description2'] = sanitize($_POST['about_description2'] ?? '');
-    $customization['about']['shop_title'] = sanitize($_POST['about_shop_title'] ?? '');
-    $customization['about']['shop_text'] = sanitize($_POST['about_shop_text'] ?? '');
-    $customization['about']['processing_title'] = sanitize($_POST['about_processing_title'] ?? '');
-    $customization['about']['processing_text'] = sanitize($_POST['about_processing_text'] ?? '');
-    $customization['about']['image1'] = sanitize($_POST['about_image1'] ?? '');
-    $customization['about']['image2'] = sanitize($_POST['about_image2'] ?? '');
-    $customization['about']['image3'] = sanitize($_POST['about_image3'] ?? '');
-    $customization['about']['card1_title'] = sanitize($_POST['about_card1_title'] ?? '');
-    $customization['about']['card1_text'] = sanitize($_POST['about_card1_text'] ?? '');
-    $customization['about']['card2_title'] = sanitize($_POST['about_card2_title'] ?? '');
-    $customization['about']['card2_text'] = sanitize($_POST['about_card2_text'] ?? '');
-    $customization['about']['card3_title'] = sanitize($_POST['about_card3_title'] ?? '');
-    $customization['about']['card3_text'] = sanitize($_POST['about_card3_text'] ?? '');
-    
-    // Full page content (only about.html)
-    $customization['about']['page_hero_title'] = sanitize($_POST['about_page_hero_title'] ?? '');
-    $customization['about']['page_hero_subtitle'] = sanitize($_POST['about_page_hero_subtitle'] ?? '');
-    $customization['about']['full_content']['title'] = sanitize($_POST['about_full_title'] ?? '');
-    $customization['about']['full_content']['description1'] = sanitize($_POST['about_full_description1'] ?? '');
-    $customization['about']['full_content']['description2'] = sanitize($_POST['about_full_description2'] ?? '');
-    $customization['about']['full_content']['description3'] = sanitize($_POST['about_full_description3'] ?? '');
-    // Story section (Unsere Geschichte)
-    $customization['about']['story_title'] = sanitize($_POST['about_story_title'] ?? '');
-    $customization['about']['story_paragraph1'] = sanitize($_POST['about_story_paragraph1'] ?? '');
-    $customization['about']['story_paragraph2'] = sanitize($_POST['about_story_paragraph2'] ?? '');
-    $customization['about']['story_paragraph3'] = sanitize($_POST['about_story_paragraph3'] ?? '');
-    
-    // Stats
-    $customization['about']['stats']['stat1_number'] = sanitize($_POST['about_stat1_number'] ?? '500+');
-    $customization['about']['stats']['stat1_text'] = sanitize($_POST['about_stat1_text'] ?? 'Premium Produkte');
-    $customization['about']['stats']['stat2_number'] = sanitize($_POST['about_stat2_number'] ?? '200+');
-    $customization['about']['stats']['stat2_text'] = sanitize($_POST['about_stat2_text'] ?? 'Projekte realisiert');
-    $customization['about']['stats']['stat3_number'] = sanitize($_POST['about_stat3_number'] ?? '15+');
-    $customization['about']['stats']['stat3_text'] = sanitize($_POST['about_stat3_text'] ?? 'Jahre perfekte Handwerkskunst');
-    
-    $customization['about']['show_in_index'] = isset($_POST['about_show_in_index']);
-    $customization['about']['index_text_length'] = sanitize($_POST['about_index_text_length'] ?? 'short');
-    
-    if (writeJson('customization.json', $customization)) {
-        $message = 'About section u ruajt me sukses! Ndryshimet reflektohen në index.html';
+    $data = [
+        // Index Only Fields
+        'title' => sanitize($_POST['title']),
+        'description1' => sanitize($_POST['description1']),
+        'description2' => sanitize($_POST['description2']),
+        'shop_title' => sanitize($_POST['shop_title']),
+        'shop_text' => sanitize($_POST['shop_text']),
+        'processing_title' => sanitize($_POST['processing_title']),
+        'processing_text' => sanitize($_POST['processing_text']),
+        'image1' => sanitize($_POST['image1']),
+        'image2' => sanitize($_POST['image2']),
+        'image3' => sanitize($_POST['image3']),
+        'show_in_index' => isset($_POST['show_in_index']) ? 1 : 0,
+
+        // Full Page Fields
+        'page_hero_image' => sanitize($_POST['page_hero_image']),
+        'page_hero_title' => sanitize($_POST['page_hero_title']),
+        'page_hero_subtitle' => sanitize($_POST['page_hero_subtitle']),
+        'full_title' => sanitize($_POST['full_title']),
+        'full_desc1' => sanitize($_POST['full_desc1']),
+        'full_desc2' => sanitize($_POST['full_desc2']),
+        'full_desc3' => sanitize($_POST['full_desc3']),
+        'story_title' => sanitize($_POST['story_title']),
+        'story_p1' => sanitize($_POST['story_p1']),
+        'story_p2' => sanitize($_POST['story_p2']),
+        'story_p3' => sanitize($_POST['story_p3']),
+        
+        // Cards
+        'card1_title' => sanitize($_POST['card1_title']),
+        'card1_text' => sanitize($_POST['card1_text']),
+        'card2_title' => sanitize($_POST['card2_title']),
+        'card2_text' => sanitize($_POST['card2_text']),
+        'card3_title' => sanitize($_POST['card3_title']),
+        'card3_text' => sanitize($_POST['card3_text']),
+
+        // Stats
+        'stat1_num' => sanitize($_POST['stat1_num']),
+        'stat1_text' => sanitize($_POST['stat1_text']),
+        'stat2_num' => sanitize($_POST['stat2_num']),
+        'stat2_text' => sanitize($_POST['stat2_text']),
+        'stat3_num' => sanitize($_POST['stat3_num']),
+        'stat3_text' => sanitize($_POST['stat3_text'])
+    ];
+
+    if (updateSectionData('about_section', $data)) {
+        $message = 'Të dhënat u përditësuan me sukses!';
         $messageType = 'success';
     } else {
-        $message = 'Gabim në ruajtje!';
+        $message = 'Gabim gjatë përditësimit.';
         $messageType = 'error';
     }
-    
-    // Reload customization after save
-    $customization = readJson('customization.json');
 }
+
+// Get Data
+$about = getSectionData('about_section');
 ?>
 <!DOCTYPE html>
-<html lang="de">
+<html lang="sq">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $pageTitle; ?> - Admin Panel</title>
+    <title>Menaxho Rreth Nesh - Admin Panel</title>
     <link rel="stylesheet" href="../dist/css/output.css">
     <link rel="stylesheet" href="../assets/fontawesome/all.min.css">
-    <script src="js/media-picker.js"></script>
+    <style>
+        .preview-img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 6px;
+            background-color: #f3f4f6;
+            border: 1px dashed #d1d5db;
+        }
+    </style>
 </head>
 <body class="bg-gray-100">
-    <?php include 'includes/sidebar.php'; ?>
-    <?php include 'includes/header.php'; ?>
-
-    <div class="ml-64 pt-16 p-6">
-        <?php if ($message): ?>
-            <div class="bg-<?php echo $messageType === 'success' ? 'green' : 'red'; ?>-100 border border-<?php echo $messageType === 'success' ? 'green' : 'red'; ?>-400 text-<?php echo $messageType === 'success' ? 'green' : 'red'; ?>-700 px-4 py-3 rounded mb-4 flex items-center justify-between">
-                <span>
-                    <i class="fas fa-<?php echo $messageType === 'success' ? 'check-circle' : 'exclamation-circle'; ?> mr-2"></i>
-                    <?php echo htmlspecialchars($message); ?>
-                </span>
-                <a href="../index.html" target="_blank" class="text-<?php echo $messageType === 'success' ? 'green' : 'red'; ?>-700 hover:underline font-semibold">
-                    <i class="fas fa-external-link-alt mr-1"></i>Shiko Faqen
-                </a>
-            </div>
-        <?php endif; ?>
-
-        <!-- About Section Form -->
-        <div class="bg-white rounded-lg shadow p-6 mb-8">
-            <h2 class="text-xl font-bold mb-4 flex items-center">
-                <i class="fas fa-info-circle text-primary mr-2"></i>
-                Menaxho About Us Section
-            </h2>
-            <form method="POST" class="space-y-6">
-                <!-- SECTION 1: INDEX.HTML ONLY -->
-                <div class="bg-blue-50 border-l-4 border-primary p-4 rounded-lg">
-                    <div class="flex items-center mb-4">
-                        <i class="fas fa-home text-primary mr-2"></i>
-                        <h3 class="text-lg font-bold text-primary">VETËM PËR INDEX.HTML</h3>
-                        <span class="ml-2 text-xs bg-primary text-white px-2 py-1 rounded">*</span>
-                    </div>
-                    
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">
-                                <span class="text-primary font-bold mr-1">*</span>Title
-                            </label>
-                            <input type="text" name="about_title" value="<?php echo htmlspecialchars($customization['about']['title'] ?? ''); ?>" 
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">
-                                <span class="text-primary font-bold mr-1">*</span>Description 1
-                            </label>
-                            <textarea name="about_description1" rows="3" 
-                                      class="w-full px-4 py-2 border border-gray-300 rounded-lg"><?php echo htmlspecialchars($customization['about']['description1'] ?? ''); ?></textarea>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">
-                                <span class="text-primary font-bold mr-1">*</span>Description 2
-                            </label>
-                            <textarea name="about_description2" rows="3" 
-                                      class="w-full px-4 py-2 border border-gray-300 rounded-lg"><?php echo htmlspecialchars($customization['about']['description2'] ?? ''); ?></textarea>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">
-                                    <span class="text-primary font-bold mr-1">*</span>Shop Title
-                                </label>
-                                <input type="text" name="about_shop_title" value="<?php echo htmlspecialchars($customization['about']['shop_title'] ?? ''); ?>" 
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">
-                                    <span class="text-primary font-bold mr-1">*</span>Shop Text
-                                </label>
-                                <textarea name="about_shop_text" rows="3" 
-                                          class="w-full px-4 py-2 border border-gray-300 rounded-lg"><?php echo htmlspecialchars($customization['about']['shop_text'] ?? ''); ?></textarea>
-                            </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">
-                                    <span class="text-primary font-bold mr-1">*</span>Processing Title
-                                </label>
-                                <input type="text" name="about_processing_title" value="<?php echo htmlspecialchars($customization['about']['processing_title'] ?? ''); ?>" 
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">
-                                    <span class="text-primary font-bold mr-1">*</span>Processing Text
-                                </label>
-                                <textarea name="about_processing_text" rows="3" 
-                                          class="w-full px-4 py-2 border border-gray-300 rounded-lg"><?php echo htmlspecialchars($customization['about']['processing_text'] ?? ''); ?></textarea>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">
-                                <span class="text-primary font-bold mr-1">*</span>Images (Collage - 3 foto)
-                            </label>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div>
-                                    <label class="block text-xs text-gray-600 mb-1">Image 1 (Top)</label>
-                                    <input type="text" name="about_image1" data-media-picker="image"
-                                           value="<?php echo htmlspecialchars($customization['about']['image1'] ?? ''); ?>" 
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                                </div>
-                                <div>
-                                    <label class="block text-xs text-gray-600 mb-1">Image 2 (Bottom Left)</label>
-                                    <input type="text" name="about_image2" data-media-picker="image"
-                                           value="<?php echo htmlspecialchars($customization['about']['image2'] ?? ''); ?>" 
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                                </div>
-                                <div>
-                                    <label class="block text-xs text-gray-600 mb-1">Image 3 (Bottom Right)</label>
-                                    <input type="text" name="about_image3" data-media-picker="image"
-                                           value="<?php echo htmlspecialchars($customization['about']['image3'] ?? ''); ?>" 
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">
-                                <span class="text-primary font-bold mr-1">*</span>Stats
-                            </label>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div>
-                                    <input type="text" name="about_stat1_number" placeholder="Stat 1 Number" value="<?php echo htmlspecialchars($customization['about']['stats']['stat1_number'] ?? '500+'); ?>" 
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-2">
-                                    <input type="text" name="about_stat1_text" placeholder="Stat 1 Text" value="<?php echo htmlspecialchars($customization['about']['stats']['stat1_text'] ?? 'Premium Produkte'); ?>" 
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                                </div>
-                                <div>
-                                    <input type="text" name="about_stat2_number" placeholder="Stat 2 Number" value="<?php echo htmlspecialchars($customization['about']['stats']['stat2_number'] ?? '200+'); ?>" 
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-2">
-                                    <input type="text" name="about_stat2_text" placeholder="Stat 2 Text" value="<?php echo htmlspecialchars($customization['about']['stats']['stat2_text'] ?? 'Projekte realisiert'); ?>" 
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                                </div>
-                                <div>
-                                    <input type="text" name="about_stat3_number" placeholder="Stat 3 Number" value="<?php echo htmlspecialchars($customization['about']['stats']['stat3_number'] ?? '15+'); ?>" 
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-2">
-                                    <input type="text" name="about_stat3_text" placeholder="Stat 3 Text" value="<?php echo htmlspecialchars($customization['about']['stats']['stat3_text'] ?? 'Jahre perfekte Handwerkskunst'); ?>" 
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-center space-x-4 pt-2">
-                            <label class="flex items-center">
-                                <input type="checkbox" name="about_show_in_index" <?php echo ($customization['about']['show_in_index'] ?? true) ? 'checked' : ''; ?> class="mr-2">
-                                <span class="text-sm">Shfaq në Index</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- SECTION 2: ABOUT.HTML ONLY -->
-                <div class="bg-gray-50 border-l-4 border-gray-600 p-4 rounded-lg">
-                    <div class="flex items-center mb-4">
-                        <i class="fas fa-file-alt text-gray-600 mr-2"></i>
-                        <h3 class="text-lg font-bold text-gray-700">VETËM PËR ABOUT.HTML</h3>
-                    </div>
-                    
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Hero Section</label>
-                            <div class="space-y-3">
-                                <input type="text" name="about_page_hero_image" data-media-picker="image" placeholder="Hero Image URL"
-                                       value="<?php echo htmlspecialchars($customization['about']['page_hero_image'] ?? ''); ?>" 
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                                <input type="text" name="about_page_hero_title" placeholder="Hero Title" value="<?php echo htmlspecialchars($customization['about']['page_hero_title'] ?? 'Über uns'); ?>" 
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                                <textarea name="about_page_hero_subtitle" rows="2" placeholder="Hero Subtitle"
-                                          class="w-full px-4 py-2 border border-gray-300 rounded-lg"><?php echo htmlspecialchars($customization['about']['page_hero_subtitle'] ?? 'Unsere Geschichte, unsere Werte und unsere Leidenschaft für Perfektion'); ?></textarea>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Main Content</label>
-                            <div class="space-y-3">
-                                <input type="text" name="about_full_title" placeholder="Title" value="<?php echo htmlspecialchars($customization['about']['full_content']['title'] ?? ''); ?>" 
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                                <textarea name="about_full_description1" rows="3" placeholder="Description 1"
-                                          class="w-full px-4 py-2 border border-gray-300 rounded-lg"><?php echo htmlspecialchars($customization['about']['full_content']['description1'] ?? ''); ?></textarea>
-                                <textarea name="about_full_description2" rows="3" placeholder="Description 2"
-                                          class="w-full px-4 py-2 border border-gray-300 rounded-lg"><?php echo htmlspecialchars($customization['about']['full_content']['description2'] ?? ''); ?></textarea>
-                                <textarea name="about_full_description3" rows="3" placeholder="Description 3"
-                                          class="w-full px-4 py-2 border border-gray-300 rounded-lg"><?php echo htmlspecialchars($customization['about']['full_content']['description3'] ?? ''); ?></textarea>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Images (Collage - 3 foto)</label>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div>
-                                    <label class="block text-xs text-gray-600 mb-1">Image 1 (Top)</label>
-                                    <input type="text" name="about_image1" data-media-picker="image"
-                                           value="<?php echo htmlspecialchars($customization['about']['image1'] ?? ''); ?>" 
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                                </div>
-                                <div>
-                                    <label class="block text-xs text-gray-600 mb-1">Image 2 (Bottom Left)</label>
-                                    <input type="text" name="about_image2" data-media-picker="image"
-                                           value="<?php echo htmlspecialchars($customization['about']['image2'] ?? ''); ?>" 
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                                </div>
-                                <div>
-                                    <label class="block text-xs text-gray-600 mb-1">Image 3 (Bottom Right)</label>
-                                    <input type="text" name="about_image3" data-media-picker="image"
-                                           value="<?php echo htmlspecialchars($customization['about']['image3'] ?? ''); ?>" 
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Cards (Qualität, Vertrauen, Leidenschaft)</label>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div>
-                                    <input type="text" name="about_card1_title" placeholder="Card 1 Title" value="<?php echo htmlspecialchars($customization['about']['card1_title'] ?? 'Qualität'); ?>" 
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-2">
-                                    <textarea name="about_card1_text" rows="3" placeholder="Card 1 Text"
-                                              class="w-full px-4 py-2 border border-gray-300 rounded-lg"><?php echo htmlspecialchars($customization['about']['card1_text'] ?? ''); ?></textarea>
-                                </div>
-                                <div>
-                                    <input type="text" name="about_card2_title" placeholder="Card 2 Title" value="<?php echo htmlspecialchars($customization['about']['card2_title'] ?? 'Vertrauen'); ?>" 
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-2">
-                                    <textarea name="about_card2_text" rows="3" placeholder="Card 2 Text"
-                                              class="w-full px-4 py-2 border border-gray-300 rounded-lg"><?php echo htmlspecialchars($customization['about']['card2_text'] ?? ''); ?></textarea>
-                                </div>
-                                <div>
-                                    <input type="text" name="about_card3_title" placeholder="Card 3 Title" value="<?php echo htmlspecialchars($customization['about']['card3_title'] ?? 'Leidenschaft'); ?>" 
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-2">
-                                    <textarea name="about_card3_text" rows="3" placeholder="Card 3 Text"
-                                              class="w-full px-4 py-2 border border-gray-300 rounded-lg"><?php echo htmlspecialchars($customization['about']['card3_text'] ?? ''); ?></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Stats</label>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div>
-                                    <input type="text" name="about_stat1_number" placeholder="Stat 1 Number" value="<?php echo htmlspecialchars($customization['about']['stats']['stat1_number'] ?? '500+'); ?>" 
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-2">
-                                    <input type="text" name="about_stat1_text" placeholder="Stat 1 Text" value="<?php echo htmlspecialchars($customization['about']['stats']['stat1_text'] ?? 'Premium Produkte'); ?>" 
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                                </div>
-                                <div>
-                                    <input type="text" name="about_stat2_number" placeholder="Stat 2 Number" value="<?php echo htmlspecialchars($customization['about']['stats']['stat2_number'] ?? '200+'); ?>" 
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-2">
-                                    <input type="text" name="about_stat2_text" placeholder="Stat 2 Text" value="<?php echo htmlspecialchars($customization['about']['stats']['stat2_text'] ?? 'Projekte realisiert'); ?>" 
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                                </div>
-                                <div>
-                                    <input type="text" name="about_stat3_number" placeholder="Stat 3 Number" value="<?php echo htmlspecialchars($customization['about']['stats']['stat3_number'] ?? '15+'); ?>" 
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-2">
-                                    <input type="text" name="about_stat3_text" placeholder="Stat 3 Text" value="<?php echo htmlspecialchars($customization['about']['stats']['stat3_text'] ?? 'Jahre perfekte Handwerkskunst'); ?>" 
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Unsere Geschichte Section</label>
-                            <div class="space-y-3">
-                                <input type="text" name="about_story_title" placeholder="Story Title" value="<?php echo htmlspecialchars($customization['about']['story_title'] ?? 'Unsere Geschichte'); ?>" 
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                                <textarea name="about_story_paragraph1" rows="3" placeholder="Story Paragraph 1"
-                                          class="w-full px-4 py-2 border border-gray-300 rounded-lg"><?php echo htmlspecialchars($customization['about']['story_paragraph1'] ?? ''); ?></textarea>
-                                <textarea name="about_story_paragraph2" rows="3" placeholder="Story Paragraph 2"
-                                          class="w-full px-4 py-2 border border-gray-300 rounded-lg"><?php echo htmlspecialchars($customization['about']['story_paragraph2'] ?? ''); ?></textarea>
-                                <textarea name="about_story_paragraph3" rows="3" placeholder="Story Paragraph 3"
-                                          class="w-full px-4 py-2 border border-gray-300 rounded-lg"><?php echo htmlspecialchars($customization['about']['story_paragraph3'] ?? ''); ?></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="w-64 flex-shrink-0">
+            <?php include 'includes/sidebar.php'; ?>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+            <!-- Header -->
+            <header class="bg-white shadow-sm z-10 h-16 flex items-center justify-between px-6 border-b border-gray-200">
+                <h1 class="text-xl font-bold text-gray-800">
+                    <i class="fas fa-info-circle mr-2 text-primary"></i>Rreth Nesh (About Us)
+                </h1>
+            </header>
+            
+            <!-- Scrollable Content -->
+            <main class="flex-1 overflow-y-auto bg-gray-50 p-6 md:p-8">
                 
-                <button type="submit" class="bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-900 font-semibold text-lg shadow-lg hover:shadow-xl transition-all mt-6">
-                    <i class="fas fa-save mr-2"></i>Ruaj About Section
-                </button>
-            </form>
+                <?php if ($message): ?>
+                    <div class="mb-6 p-4 rounded-lg <?php echo $messageType === 'success' ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-red-100 text-red-700 border border-red-200'; ?> flex items-center shadow-sm">
+                        <i class="fas <?php echo $messageType === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'; ?> mr-3 text-xl"></i>
+                        <span class="font-medium"><?php echo $message; ?></span>
+                    </div>
+                <?php endif; ?>
+
+                <form method="POST" class="space-y-8 max-w-5xl mx-auto">
+                    
+                    <!-- 1. INDEX PAGE SECTION -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="bg-blue-50/50 p-4 border-b border-blue-100 flex items-center justify-between">
+                            <h2 class="text-lg font-bold text-blue-900 flex items-center">
+                                <span class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">1</span>
+                                Seksioni në Ballinë (Index)
+                            </h2>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" name="show_in_index" <?php echo ($about['show_in_index'] ?? 1) ? 'checked' : ''; ?> class="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300">
+                                <span class="ml-2 text-sm text-gray-700 font-medium">Shfaq në Home</span>
+                            </label>
+                        </div>
+                        
+                        <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="col-span-2">
+                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Titulli Kryesor</label>
+                                <input type="text" name="title" value="<?php echo htmlspecialchars($about['title'] ?? ''); ?>" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Përshkrimi Majtas</label>
+                                <textarea name="description1" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500"><?php echo htmlspecialchars($about['description1'] ?? ''); ?></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Përshkrimi Djathtas</label>
+                                <textarea name="description2" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500"><?php echo htmlspecialchars($about['description2'] ?? ''); ?></textarea>
+                            </div>
+
+                            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                <h3 class="font-bold text-gray-800 mb-3 flex items-center"><i class="fas fa-store text-primary mr-2"></i> Shop Info</h3>
+                                <input type="text" name="shop_title" placeholder="Titulli (p.sh. Shop:)" value="<?php echo htmlspecialchars($about['shop_title'] ?? ''); ?>" class="w-full px-3 py-2 border border-gray-300 rounded mb-2 text-sm font-medium">
+                                <textarea name="shop_text" rows="3" placeholder="Përshkrimi..." class="w-full px-3 py-2 border border-gray-300 rounded text-sm"><?php echo htmlspecialchars($about['shop_text'] ?? ''); ?></textarea>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                <h3 class="font-bold text-gray-800 mb-3 flex items-center"><i class="fas fa-tools text-primary mr-2"></i> Processing Info</h3>
+                                <input type="text" name="processing_title" placeholder="Titulli (p.sh. Processing:)" value="<?php echo htmlspecialchars($about['processing_title'] ?? ''); ?>" class="w-full px-3 py-2 border border-gray-300 rounded mb-2 text-sm font-medium">
+                                <textarea name="processing_text" rows="3" placeholder="Përshkrimi..." class="w-full px-3 py-2 border border-gray-300 rounded text-sm"><?php echo htmlspecialchars($about['processing_text'] ?? ''); ?></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. FULL PAGE SECTION -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="bg-purple-50/50 p-4 border-b border-purple-100">
+                            <h2 class="text-lg font-bold text-purple-900 flex items-center">
+                                <span class="bg-purple-100 text-purple-600 w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">2</span>
+                                Faqja e Plotë (About.html)
+                            </h2>
+                        </div>
+                        
+                        <div class="p-6 space-y-6">
+                            <!-- Hero Settings -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6 border-b border-gray-100">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Titulli Hero</label>
+                                    <input type="text" name="page_hero_title" value="<?php echo htmlspecialchars($about['page_hero_title'] ?? ''); ?>" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                    <div class="mt-4">
+                                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Nëntitulli Hero</label>
+                                        <textarea name="page_hero_subtitle" rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-lg"><?php echo htmlspecialchars($about['page_hero_subtitle'] ?? ''); ?></textarea>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Imazhi i Sfondit</label>
+                                    <div class="relative group cursor-pointer" onclick="openMediaPicker('page_hero_image')">
+                                        <img src="../<?php echo !empty($about['page_hero_image']) ? htmlspecialchars($about['page_hero_image']) : 'assets/img/placeholder.png'; ?>" 
+                                             id="page_hero_image_preview" 
+                                             class="w-full h-32 object-cover rounded-lg border-2 border-dashed border-gray-300 hover:border-purple-500 transition-colors">
+                                        <div class="absolute inset-0 flex items-center justify-center bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg">
+                                            <span class="bg-white/90 text-gray-800 px-3 py-1 rounded-full text-xs font-bold shadow-sm">Ndrysho Foton</span>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="page_hero_image" name="page_hero_image" value="<?php echo htmlspecialchars($about['page_hero_image'] ?? ''); ?>">
+                                </div>
+                            </div>
+
+                            <!-- Main Content -->
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Përmbajtja Kryesore</label>
+                                <input type="text" name="full_title" placeholder="Titulli i seksionit" value="<?php echo htmlspecialchars($about['full_title'] ?? ''); ?>" class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-3">
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <textarea name="full_desc1" rows="4" placeholder="Paragrafi 1" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"><?php echo htmlspecialchars($about['full_desc1'] ?? ''); ?></textarea>
+                                    <textarea name="full_desc2" rows="4" placeholder="Paragrafi 2" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"><?php echo htmlspecialchars($about['full_desc2'] ?? ''); ?></textarea>
+                                    <textarea name="full_desc3" rows="4" placeholder="Paragrafi 3" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"><?php echo htmlspecialchars($about['full_desc3'] ?? ''); ?></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Story -->
+                            <div class="bg-gray-50 p-5 rounded-xl border border-gray-200">
+                                <div class="flex items-center mb-4">
+                                    <i class="fas fa-history text-purple-500 mr-2 text-lg"></i>
+                                    <h3 class="font-bold text-gray-800">Historia Jonë</h3>
+                                </div>
+                                <input type="text" name="story_title" placeholder="Titulli i Historisë" value="<?php echo htmlspecialchars($about['story_title'] ?? ''); ?>" class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4 bg-white">
+                                <div class="space-y-3">
+                                    <textarea name="story_p1" rows="2" placeholder="Pjesa 1..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white"><?php echo htmlspecialchars($about['story_p1'] ?? ''); ?></textarea>
+                                    <textarea name="story_p2" rows="2" placeholder="Pjesa 2..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white"><?php echo htmlspecialchars($about['story_p2'] ?? ''); ?></textarea>
+                                    <textarea name="story_p3" rows="2" placeholder="Pjesa 3..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white"><?php echo htmlspecialchars($about['story_p3'] ?? ''); ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. SHARED RESOURCES (IMAGES, CARDS, STATS) -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="bg-green-50/50 p-4 border-b border-green-100">
+                            <h2 class="text-lg font-bold text-green-900 flex items-center">
+                                <span class="bg-green-100 text-green-600 w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">3</span>
+                                Burimet e Përbashkëta (Shared)
+                            </h2>
+                        </div>
+
+                        <div class="p-6 space-y-8">
+                            
+                            <!-- 3.1 IMAGES COLLAGE -->
+                            <div>
+                                <h3 class="text-sm font-bold text-gray-700 uppercase mb-3 flex items-center">
+                                    <i class="fas fa-images mr-2 text-gray-400"></i> Kollazhi i Fotove
+                                </h3>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <?php for($i=1; $i<=3; $i++): ?>
+                                    <div class="relative group">
+                                        <div class="bg-gray-100 rounded-lg p-2 border border-gray-200 text-center cursor-pointer hover:border-green-500 transition-colors" onclick="openMediaPicker('image<?php echo $i; ?>')">
+                                            <div class="h-32 mb-2 bg-white rounded flex items-center justify-center overflow-hidden">
+                                                <img src="../<?php echo !empty($about["image$i"]) ? htmlspecialchars($about["image$i"]) : 'assets/img/placeholder.png'; ?>" 
+                                                     id="image<?php echo $i; ?>_preview" 
+                                                     class="w-full h-full object-cover">
+                                            </div>
+                                            <span class="text-xs font-bold text-gray-500 group-hover:text-green-600">Foto <?php echo $i; ?> <i class="fas fa-edit ml-1"></i></span>
+                                        </div>
+                                        <input type="hidden" id="image<?php echo $i; ?>" name="image<?php echo $i; ?>" value="<?php echo htmlspecialchars($about["image$i"] ?? ''); ?>">
+                                    </div>
+                                    <?php endfor; ?>
+                                </div>
+                            </div>
+
+                            <hr class="border-gray-100">
+
+                            <!-- 3.2 CARDS -->
+                            <div>
+                                <h3 class="text-sm font-bold text-gray-700 uppercase mb-3 flex items-center">
+                                    <i class="fas fa-th-large mr-2 text-gray-400"></i> Kartat e Vlerave
+                                </h3>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <!-- Card 1 -->
+                                    <div class="bg-blue-50/50 p-4 rounded-xl border border-blue-100">
+                                        <div class="flex items-center mb-2">
+                                            <i class="fas fa-award text-blue-500 mr-2"></i>
+                                            <input type="text" name="card1_title" value="<?php echo htmlspecialchars($about['card1_title'] ?? ''); ?>" class="bg-transparent font-bold text-gray-800 text-sm w-full focus:outline-none border-b border-transparent focus:border-blue-300" placeholder="Titulli 1">
+                                        </div>
+                                        <textarea name="card1_text" rows="3" class="w-full bg-white border border-gray-200 rounded p-2 text-xs focus:ring-1 focus:ring-blue-500" placeholder="Teksti..."><?php echo htmlspecialchars($about['card1_text'] ?? ''); ?></textarea>
+                                    </div>
+                                    <!-- Card 2 -->
+                                    <div class="bg-green-50/50 p-4 rounded-xl border border-green-100">
+                                        <div class="flex items-center mb-2">
+                                            <i class="fas fa-handshake text-green-500 mr-2"></i>
+                                            <input type="text" name="card2_title" value="<?php echo htmlspecialchars($about['card2_title'] ?? ''); ?>" class="bg-transparent font-bold text-gray-800 text-sm w-full focus:outline-none border-b border-transparent focus:border-green-300" placeholder="Titulli 2">
+                                        </div>
+                                        <textarea name="card2_text" rows="3" class="w-full bg-white border border-gray-200 rounded p-2 text-xs focus:ring-1 focus:ring-green-500" placeholder="Teksti..."><?php echo htmlspecialchars($about['card2_text'] ?? ''); ?></textarea>
+                                    </div>
+                                    <!-- Card 3 -->
+                                    <div class="bg-red-50/50 p-4 rounded-xl border border-red-100">
+                                        <div class="flex items-center mb-2">
+                                            <i class="fas fa-heart text-red-500 mr-2"></i>
+                                            <input type="text" name="card3_title" value="<?php echo htmlspecialchars($about['card3_title'] ?? ''); ?>" class="bg-transparent font-bold text-gray-800 text-sm w-full focus:outline-none border-b border-transparent focus:border-red-300" placeholder="Titulli 3">
+                                        </div>
+                                        <textarea name="card3_text" rows="3" class="w-full bg-white border border-gray-200 rounded p-2 text-xs focus:ring-1 focus:ring-red-500" placeholder="Teksti..."><?php echo htmlspecialchars($about['card3_text'] ?? ''); ?></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr class="border-gray-100">
+
+                            <!-- 3.3 STATS -->
+                            <div>
+                                <h3 class="text-sm font-bold text-gray-700 uppercase mb-3 flex items-center">
+                                    <i class="fas fa-chart-bar mr-2 text-gray-400"></i> Statistikat
+                                </h3>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <?php for($i=1; $i<=3; $i++): ?>
+                                    <div class="flex items-center space-x-3 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                                        <div class="bg-white p-2 rounded shadow-sm border border-gray-100 w-16 text-center">
+                                            <input type="text" name="stat<?php echo $i; ?>_num" value="<?php echo htmlspecialchars($about["stat{$i}_num"] ?? ''); ?>" class="w-full text-center font-black text-gray-800 focus:outline-none text-sm" placeholder="Nr">
+                                        </div>
+                                        <div class="flex-1">
+                                            <input type="text" name="stat<?php echo $i; ?>_text" value="<?php echo htmlspecialchars($about["stat{$i}_text"] ?? ''); ?>" class="w-full bg-transparent border-b border-gray-300 focus:border-primary focus:outline-none text-sm pb-1" placeholder="Përshkrimi i statistikës">
+                                        </div>
+                                    </div>
+                                    <?php endfor; ?>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Sticky Save Bar -->
+                    <div class="sticky bottom-4 bg-white/90 backdrop-blur shadow-2xl border border-gray-200 rounded-xl p-4 flex justify-between items-center z-40">
+                        <div class="text-sm text-gray-500">
+                            <i class="fas fa-info-circle mr-1"></i> Mos harroni të ruani ndryshimet!
+                        </div>
+                        <button type="submit" class="bg-primary hover:bg-primary-dark text-white font-bold py-3 px-8 rounded-lg shadow-lg transform hover:-translate-y-0.5 transition-all flex items-center">
+                            <i class="fas fa-save mr-2"></i> RUAJ TË GJITHA
+                        </button>
+                    </div>
+
+                </form>
+            </main>
         </div>
     </div>
-
+    
+    <script src="js/media-picker.js"></script>
 </body>
 </html>
-

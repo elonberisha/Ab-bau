@@ -1,12 +1,18 @@
 <?php
-session_start();
-
-// Check if user is logged in
-function isLoggedIn() {
-    return isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true;
+// Start session only if not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
 
-// Require login
+// Database Connection
+require_once __DIR__ . '/includes/db_connect.php';
+
+// --- AUTHENTICATION FUNCTIONS ---
+
+function isLoggedIn() {
+    return isset($_SESSION['user_id']);
+}
+
 function requireLogin() {
     if (!isLoggedIn()) {
         header('Location: login.php');
@@ -14,370 +20,165 @@ function requireLogin() {
     }
 }
 
-// Get current logged-in user info
 function getCurrentUser() {
-    return $_SESSION['current_user'] ?? null;
-}
-
-// Get data directory path
-function getDataPath($file) {
-    return dirname(__DIR__) . '/data/' . $file;
-}
-
-// Read JSON file with UTF-8 encoding
-function readJson($file) {
-    $path = getDataPath($file);
-    if (!file_exists($path)) {
-        return [];
-    }
-    $content = file_get_contents($path);
-    // Remove UTF-8 BOM if present
-    $content = preg_replace('/^\xEF\xBB\xBF/', '', $content);
-    // Ensure UTF-8 encoding
-    if (!mb_check_encoding($content, 'UTF-8')) {
-        $content = mb_convert_encoding($content, 'UTF-8', 'auto');
-    }
-    return json_decode($content, true) ?: [];
-}
-
-// Write JSON file with UTF-8 encoding
-function writeJson($file, $data) {
-    $path = getDataPath($file);
-    $dir = dirname($path);
-    if (!is_dir($dir)) {
-        mkdir($dir, 0755, true);
-    }
-    // Encode with proper UTF-8 handling and preserve all characters
-    $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_LINE_TERMINATORS);
-    // Ensure UTF-8 BOM is not added and file is saved as UTF-8
-    return file_put_contents($path, $json, LOCK_EX);
-}
-
-// NEW: Verify user credentials
-function verifyUserCredentials($username, $password) {
-    $config = readJson('config.json');
-    $users = $config['users'] ?? [];
-    
-    foreach ($users as $user) {
-        if ($user['username'] === $username) {
-            if (password_verify($password, $user['password_hash'])) {
-                return $user; // Return user array on success
-            }
-        }
-    }
-    return false;
-}
-
-// NEW: Update user password
-function updateUserPassword($username, $newPassword) {
-    $config = readJson('config.json');
-    $users = $config['users'] ?? [];
-    $updated = false;
-    
-    foreach ($users as &$user) {
-        if ($user['username'] === $username) {
-            $user['password_hash'] = hashPassword($newPassword);
-            $updated = true;
-            break;
-        }
-    }
-    
-    if ($updated) {
-        return writeJson('config.json', $config);
-    }
-    return false;
-}
-
-// NEW: Get user by email (for forgot password)
-function getUserByEmail($email) {
-    $config = readJson('config.json');
-    $users = $config['users'] ?? [];
-    
-    foreach ($users as $user) {
-        if (strtolower($user['email']) === strtolower($email)) {
-            return $user;
-        }
+    if (isLoggedIn()) {
+        return [
+            'id' => $_SESSION['user_id'],
+            'username' => $_SESSION['username'],
+            'role' => $_SESSION['role']
+        ];
     }
     return null;
 }
 
-// Verify password (LEGACY - keeping for backward compatibility if needed, but updated)
-function verifyPassword($password) {
-    // This function is deprecated in favor of verifyUserCredentials
-    // But we'll make it work for 'admin' user by default just in case
-    $user = verifyUserCredentials('admin', $password);
-    return $user !== false;
+function verifyUserCredentials($username, $password) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = :username LIMIT 1");
+    $stmt->execute(['username' => $username]);
+    $user = $stmt->fetch();
+
+    if ($user) {
+        $hash = isset($user['password_hash']) ? $user['password_hash'] : ($user['password'] ?? null);
+        if ($hash && password_verify($password, $hash)) {
+            return $user;
+        }
+    }
+    return false;
 }
 
-// Hash password
-function hashPassword($password) {
-    return password_hash($password, PASSWORD_DEFAULT);
+function getUserByEmail($email) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email LIMIT 1");
+    $stmt->execute(['email' => $email]);
+    return $stmt->fetch();
 }
 
-// Update password (LEGACY - updates 'admin' password)
-function updatePassword($newPassword) {
-    return updateUserPassword('admin', $newPassword);
+function updateUserPassword($userId, $newPassword) {
+    global $pdo;
+    $hash = password_hash($newPassword, PASSWORD_DEFAULT);
+    try {
+        $stmt = $pdo->prepare("UPDATE users SET password_hash = :hash WHERE id = :id");
+        $result = $stmt->execute(['hash' => $hash, 'id' => $userId]);
+    } catch (PDOException $e) {
+        $stmt = $pdo->prepare("UPDATE users SET password = :hash WHERE id = :id");
+        $result = $stmt->execute(['hash' => $hash, 'id' => $userId]);
+    }
+    return $result;
 }
 
-// Sanitize input - preserve text structure but clean it
+// --- DATA MANAGEMENT FUNCTIONS ---
+
+function getSectionData($table) {
+    global $pdo;
+    $allowedTables = ['hero_section', 'about_section', 'contact_section', 'legal_section'];
+    if (!in_array($table, $allowedTables)) return [];
+
+    try {
+        $stmt = $pdo->query("SELECT * FROM $table LIMIT 1");
+        $data = $stmt->fetch();
+        return $data ? $data : [];
+    } catch (PDOException $e) {
+        return [];
+    }
+}
+
+function updateSectionData($table, $data) {
+    global $pdo;
+    $allowedTables = ['hero_section', 'about_section', 'contact_section', 'legal_section'];
+    if (!in_array($table, $allowedTables)) return false;
+
+    $stmt = $pdo->query("SELECT id FROM $table LIMIT 1");
+    $exists = $stmt->fetch();
+
+    if ($exists) {
+        $fields = [];
+        $params = [];
+        foreach ($data as $key => $value) {
+            $fields[] = "$key = :$key";
+            $params[$key] = $value;
+        }
+        $params['id'] = $exists['id'];
+        $sql = "UPDATE $table SET " . implode(', ', $fields) . " WHERE id = :id";
+        $stmt = $pdo->prepare($sql);
+        return $stmt->execute($params);
+    } else {
+        $columns = implode(', ', array_keys($data));
+        $placeholders = ':' . implode(', :', array_keys($data));
+        $sql = "INSERT INTO $table ($columns) VALUES ($placeholders)";
+        $stmt = $pdo->prepare($sql);
+        return $stmt->execute($data);
+    }
+}
+
 function sanitize($data) {
     if (is_array($data)) {
-        return array_map('sanitize', $data);
+        foreach ($data as $key => $value) {
+            $data[$key] = sanitize($value);
+        }
+        return $data;
     }
-    // Trim whitespace but preserve newlines and special characters
-    $data = trim($data);
-    // Don't strip tags or special characters - we want to preserve the text as-is
-    // Only remove null bytes and other dangerous characters
-    $data = str_replace("\0", '', $data);
-    return $data;
+    return htmlspecialchars(strip_tags(trim($data)), ENT_QUOTES, 'UTF-8');
 }
 
-// Upload image
 function uploadImage($file, $folder = 'uploads', $customName = '') {
-    if (!isset($file['tmp_name']) || !is_uploaded_file($file['tmp_name'])) {
-        return ['success' => false, 'error' => 'File nuk u ngarkua saktë'];
-    }
-    
-    // Validate file type by extension (more reliable)
-    $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-    $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-    
-    if (!in_array($extension, $allowedExtensions)) {
-        return ['success' => false, 'error' => 'Format i palejuar! Formatet e lejuara: JPG, JPEG, PNG, GIF, WEBP'];
-    }
-    
-    // Validate MIME type
-    $allowedMimes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-    $fileType = $file['type'];
-    
-    if (!in_array($fileType, $allowedMimes)) {
-        return ['success' => false, 'error' => 'Lloji i file nuk është imazh i vlefshëm'];
-    }
-    
-    // Check file size (max 5MB)
-    if ($file['size'] > 5 * 1024 * 1024) {
-        return ['success' => false, 'error' => 'Fotoja është shumë e madhe! Maksimumi: 5MB'];
-    }
-    
-    // Create directory if doesn't exist
-    $dir = dirname(__DIR__) . '/' . $folder;
-    if (!is_dir($dir)) {
-        mkdir($dir, 0755, true);
-    }
-    
-    // Check if file already exists (by checking if same file content exists)
-    $existingFiles = glob($dir . '/*.' . $extension);
-    $uploadedFileHash = md5_file($file['tmp_name']);
-    
-    foreach ($existingFiles as $existingFile) {
-        if (file_exists($existingFile) && md5_file($existingFile) === $uploadedFileHash) {
-            // File already exists, return existing path
-            return ['success' => true, 'path' => $folder . '/' . basename($existingFile), 'duplicate' => true];
-        }
-    }
-    
-    // Generate filename
-    if (!empty($customName)) {
-        // Use custom name, sanitize it
-        $cleanName = strtolower(trim($customName));
-        $cleanName = preg_replace('/[^a-z0-9-_]/', '-', $cleanName);
-        $cleanName = preg_replace('/-+/', '-', $cleanName);
-        $cleanName = trim($cleanName, '-');
-        
-        if (empty($cleanName)) {
-            $cleanName = 'image-' . time();
-        }
-        
-        $filename = $cleanName . '.' . $extension;
-        
-        // Check if filename already exists, add number suffix
-        $counter = 1;
-        while (file_exists($dir . '/' . $filename)) {
-            $filename = $cleanName . '-' . $counter . '.' . $extension;
-            $counter++;
-        }
-    } else {
-        // Use unique ID + timestamp
-        $filename = uniqid() . '_' . time() . '.' . $extension;
-    }
-    
-    $uploadPath = $dir . '/' . $filename;
-    
-    if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
-        return ['success' => true, 'path' => $folder . '/' . $filename, 'duplicate' => false];
-    }
-    
-    return ['success' => false, 'error' => 'Gabim në ruajtjen e fotos në server'];
-}
+    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!in_array($file['type'], $allowedTypes)) return ['success' => false, 'error' => 'Format i palejuar.'];
 
-// Upload PDF file
-function uploadPDF($file, $folder = 'uploads/pdfs') {
-    if (!isset($file['tmp_name']) || !is_uploaded_file($file['tmp_name'])) {
-        return ['success' => false, 'error' => 'File nuk u ngarkua saktë'];
-    }
-    
-    // Validate file type by extension
-    $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-    if ($extension !== 'pdf') {
-        return ['success' => false, 'error' => 'Format i palejuar! Vetëm PDF është i lejuar'];
-    }
-    
-    // Validate MIME type
-    $allowed = ['application/pdf'];
-    $fileType = $file['type'];
-    
-    if (!in_array($fileType, $allowed)) {
-        return ['success' => false, 'error' => 'Lloji i file nuk është PDF i vlefshëm'];
-    }
-    
-    // Check file size (max 10MB for PDFs)
-    if ($file['size'] > 10 * 1024 * 1024) {
-        return ['success' => false, 'error' => 'PDF është shumë i madh! Maksimumi: 10MB'];
-    }
-    
-    $filename = uniqid() . '_' . time() . '.' . $extension;
-    $uploadPath = dirname(__DIR__) . '/' . $folder . '/' . $filename;
-    
-    // Create directory if it doesn't exist
-    $dir = dirname($uploadPath);
-    if (!is_dir($dir)) {
-        mkdir($dir, 0755, true);
-    }
-    
-    if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
+    $targetDir = dirname(__DIR__) . '/' . $folder . '/';
+    if (!file_exists($targetDir)) mkdir($targetDir, 0755, true);
+
+    $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+    $filename = !empty($customName) ? preg_replace('/[^a-zA-Z0-9_-]/', '', $customName) . '.' . $extension : uniqid() . '_' . time() . '.' . $extension;
+
+    if (move_uploaded_file($file['tmp_name'], $targetDir . $filename)) {
         return ['success' => true, 'path' => $folder . '/' . $filename];
     }
-    
-    return ['success' => false, 'error' => 'Gabim në ruajtjen e PDF në server'];
+    return ['success' => false, 'error' => 'Gabim gjatë ngarkimit.'];
 }
 
-// Delete image file
 function deleteImage($path) {
-    // Normalize path
-    $path = str_replace('\\', '/', $path);
-    $path = ltrim($path, './\\');
-    
-    // If path doesn't start with uploads/, add it
-    if (strpos($path, 'uploads/') !== 0) {
-        $path = 'uploads/' . ltrim($path, '/\\');
-    }
-    
-    $baseDir = dirname(__DIR__);
-    $fullPath = $baseDir . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $path);
-    
-    // Try alternative paths if first doesn't exist
-    if (!file_exists($fullPath)) {
-        $altPath1 = $baseDir . '/' . $path;
-        $altPath2 = $baseDir . '\\' . str_replace('/', '\\', $path);
-        
-        if (file_exists($altPath1)) {
-            $fullPath = $altPath1;
-        } elseif (file_exists($altPath2)) {
-            $fullPath = $altPath2;
-        }
-    }
-    
-    if (file_exists($fullPath) && is_file($fullPath)) {
-        return @unlink($fullPath);
+    if (empty($path)) return true;
+    $realPath = realpath(dirname(__DIR__) . '/' . $path);
+    if ($realPath && file_exists($realPath) && strpos($realPath, realpath(dirname(__DIR__))) === 0) {
+        return unlink($realPath);
     }
     return false;
 }
 
-// Check if image is used in any JSON files
-function isImageUsed($imagePath) {
-    $jsonFiles = ['gallery.json', 'services.json', 'catalogs.json', 'customization.json', 'reviews.json'];
-    
-    foreach ($jsonFiles as $jsonFile) {
-        $data = readJson($jsonFile);
-        $jsonString = json_encode($data);
-        
-        if (strpos($jsonString, $imagePath) !== false) {
-            return true;
-        }
-    }
-    
-    return false;
-}
+// --- UPDATED STATS FUNCTION ---
 
-// Delete image from JSON files
-function removeImageFromJson($imagePath) {
-    // Remove from gallery
-    $gallery = readJson('gallery.json');
-    $gallery['home'] = array_filter($gallery['home'] ?? [], function($item) use ($imagePath) {
-        return $item['image'] !== $imagePath;
-    });
-    $gallery['portfolio'] = array_filter($gallery['portfolio'] ?? [], function($item) use ($imagePath) {
-        return $item['image'] !== $imagePath;
-    });
-    writeJson('gallery.json', $gallery);
-    
-    // Remove from services
-    $services = readJson('services.json');
-    foreach ($services as $key => $service) {
-        if (isset($service['image']) && $service['image'] === $imagePath) {
-            $services[$key]['image'] = '';
-        }
-    }
-    writeJson('services.json', $services);
-    
-    // Remove from catalogs
-    $catalogs = readJson('catalogs.json');
-    foreach ($catalogs as $key => $catalog) {
-        if (isset($catalog['cover_image']) && $catalog['cover_image'] === $imagePath) {
-            $catalogs[$key]['cover_image'] = '';
-        }
-        // Check products
-        if (isset($catalog['products'])) {
-            foreach ($catalog['products'] as $pKey => $product) {
-                if (isset($product['image']) && $product['image'] === $imagePath) {
-                    $catalogs[$key]['products'][$pKey]['image'] = '';
-                }
-            }
-        }
-    }
-    writeJson('catalogs.json', $catalogs);
-    
-    // Remove from customization
-    $customization = readJson('customization.json');
-    $sections = ['hero', 'about', 'services', 'catalogs', 'gallery', 'portfolio'];
-    foreach ($sections as $section) {
-        if (isset($customization[$section])) {
-            foreach ($customization[$section] as $key => $value) {
-                if (is_string($value) && $value === $imagePath) {
-                    $customization[$section][$key] = '';
-                } elseif ($key === 'partners' && is_array($value)) {
-                    // Remove image path from partners array
-                    $customization[$section][$key] = array_values(array_filter($value, function($partnerPath) use ($imagePath) {
-                        return $partnerPath !== $imagePath;
-                    }));
-                }
-            }
-        }
-    }
-    writeJson('customization.json', $customization);
-}
-
-// Get statistics
 function getStats() {
-    $gallery = readJson('gallery.json');
-    $services = readJson('services.json');
-    $reviews = readJson('reviews.json');
-    $activities = readJson('activities.json');
-    $catalogs = readJson('catalogs.json');
+    global $pdo;
     
-    $totalActivityServices = 0;
-    foreach ($activities as $activity) {
-        $totalActivityServices += count($activity['services'] ?? []);
-    }
-    
-    return [
-        'home_images' => count($gallery['home'] ?? []),
-        'portfolio_images' => count($gallery['portfolio'] ?? []),
-        'services' => count($services),
-        'activities' => count(array_filter($activities, function($a) { return $a['active'] ?? false; })),
-        'activity_services' => $totalActivityServices,
-        'catalogs' => count($catalogs['catalogs'] ?? []),
-        'pending_reviews' => count($reviews['pending'] ?? []),
-        'approved_reviews' => count($reviews['approved'] ?? [])
+    // Initialize default values to avoid "Undefined array key" errors
+    $stats = [
+        'projects' => 0,
+        'services' => 0,
+        'catalogs' => 0,
+        'reviews_total' => 0,
+        'reviews_pending' => 0
     ];
+
+    try {
+        // Projects
+        $stats['projects'] = $pdo->query("SELECT COUNT(*) FROM projects")->fetchColumn();
+
+        // Services
+        $stats['services'] = $pdo->query("SELECT COUNT(*) FROM services")->fetchColumn();
+        
+        // Catalogs
+        $stats['catalogs'] = $pdo->query("SELECT COUNT(*) FROM catalogs")->fetchColumn();
+
+        // Reviews Total
+        $stats['reviews_total'] = $pdo->query("SELECT COUNT(*) FROM reviews")->fetchColumn();
+        
+        // Reviews Pending
+        $stats['reviews_pending'] = $pdo->query("SELECT COUNT(*) FROM reviews WHERE status = 'pending'")->fetchColumn();
+        
+    } catch (PDOException $e) {
+        // In case of error (e.g. table missing), values remain 0
+    }
+
+    return $stats;
 }
+?>

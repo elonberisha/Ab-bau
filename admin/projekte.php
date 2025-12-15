@@ -4,430 +4,259 @@ requireLogin();
 
 $message = '';
 $messageType = '';
-$pageTitle = 'Projekte';
 
-// Load data
-$customization = readJson('customization.json');
-$projects = readJson('projects.json');
-if (!isset($projects['projects']) || !is_array($projects['projects'])) {
-    $projects['projects'] = [];
-}
-
-// Handle form submission
+// Handle CRUD
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $action = $_POST['action'] ?? '';
+    if (isset($_POST['action'])) {
+        if ($_POST['action'] === 'create' || $_POST['action'] === 'update') {
+            $title = sanitize($_POST['title']);
+            $description = sanitize($_POST['description']);
+            $image = sanitize($_POST['image']);
+            $type = sanitize($_POST['type']); // e.g. 'residential', 'commercial'
+            $date = sanitize($_POST['date']);
+            $active = isset($_POST['active']) ? 1 : 0;
+            
+            if (empty($date)) $date = date('Y-m-d');
 
-    if ($action === 'save_settings') {
-        $customization['portfolio']['hero_image'] = sanitize($_POST['portfolio_hero_image'] ?? '');
-        $customization['portfolio']['show_in_index'] = isset($_POST['portfolio_show_in_index']);
-        $customization['portfolio']['max_items_index'] = intval($_POST['portfolio_max_items_index'] ?? 6);
-        $customization['portfolio']['index_title'] = sanitize($_POST['portfolio_index_title'] ?? '');
-        $customization['portfolio']['index_description'] = sanitize($_POST['portfolio_index_description'] ?? '');
-        $customization['portfolio']['full_title'] = sanitize($_POST['portfolio_full_title'] ?? '');
-        $customization['portfolio']['full_description'] = sanitize($_POST['portfolio_full_description'] ?? '');
-        
-        if (writeJson('customization.json', $customization)) {
-            $message = 'Projekte Einstellungen erfolgreich gespeichert!';
-            $messageType = 'success';
-        } else {
-            $message = 'Fehler beim Speichern!';
-            $messageType = 'error';
-        }
-        $customization = readJson('customization.json');
-    } elseif ($action === 'add_project') {
-        $newProject = [
-            'id' => uniqid(),
-            'title' => sanitize($_POST['title'] ?? ''),
-            'description' => sanitize($_POST['description'] ?? ''),
-            'path' => sanitize($_POST['image'] ?? ''),
-            'date' => sanitize($_POST['date'] ?? ''),
-            'type' => 'portfolio',
-            'active' => isset($_POST['active'])
-        ];
-        $projects['projects'][] = $newProject;
-        if (writeJson('projects.json', $projects)) {
-            $message = 'Projekt erfolgreich hinzugefügt!';
-            $messageType = 'success';
-            $projects = readJson('projects.json');
-        } else {
-            $message = 'Fehler beim Hinzufügen des Projekts!';
-            $messageType = 'error';
-        }
-    } elseif ($action === 'edit_project') {
-        $id = $_POST['id'] ?? '';
-        foreach ($projects['projects'] as $k => $proj) {
-            if ($proj['id'] === $id) {
-                $projects['projects'][$k]['title'] = sanitize($_POST['title'] ?? '');
-                $projects['projects'][$k]['description'] = sanitize($_POST['description'] ?? '');
-                $projects['projects'][$k]['path'] = sanitize($_POST['image'] ?? '');
-                $projects['projects'][$k]['date'] = sanitize($_POST['date'] ?? '');
-                $projects['projects'][$k]['active'] = isset($_POST['active']);
-                break;
+            if ($_POST['action'] === 'create') {
+                $stmt = $pdo->prepare("INSERT INTO projects (title, description, image, type, date, active) VALUES (:title, :desc, :img, :type, :date, :active)");
+                if ($stmt->execute(['title' => $title, 'desc' => $description, 'img' => $image, 'type' => $type, 'date' => $date, 'active' => $active])) {
+                    $message = 'Projekti u shtua!';
+                    $messageType = 'success';
+                }
+            } else {
+                $id = (int)$_POST['id'];
+                $stmt = $pdo->prepare("UPDATE projects SET title = :title, description = :desc, image = :img, type = :type, date = :date, active = :active WHERE id = :id");
+                if ($stmt->execute(['title' => $title, 'desc' => $description, 'img' => $image, 'type' => $type, 'date' => $date, 'active' => $active, 'id' => $id])) {
+                    $message = 'Projekti u përditësua!';
+                    $messageType = 'success';
+                }
             }
-        }
-        if (writeJson('projects.json', $projects)) {
-            $message = 'Projekt erfolgreich aktualisiert!';
-            $messageType = 'success';
-            $projects = readJson('projects.json');
-        } else {
-            $message = 'Fehler beim Aktualisieren!';
-            $messageType = 'error';
-        }
-    } elseif ($action === 'delete_project') {
-        $id = $_POST['id'] ?? '';
-        $projects['projects'] = array_values(array_filter($projects['projects'], function($p) use ($id) {
-            return $p['id'] !== $id;
-        }));
-        if (writeJson('projects.json', $projects)) {
-            $message = 'Projekt erfolgreich gelöscht!';
-            $messageType = 'success';
-            $projects = readJson('projects.json');
-        } else {
-            $message = 'Fehler beim Löschen!';
-            $messageType = 'error';
+        } elseif ($_POST['action'] === 'delete') {
+            $id = (int)$_POST['id'];
+            $stmt = $pdo->prepare("DELETE FROM projects WHERE id = :id");
+            if ($stmt->execute(['id' => $id])) {
+                $message = 'Projekti u fshi!';
+                $messageType = 'success';
+            }
         }
     }
 }
+
+$projects = $pdo->query("SELECT * FROM projects ORDER BY date DESC")->fetchAll();
 ?>
 <!DOCTYPE html>
-<html lang="de">
+<html lang="sq">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $pageTitle; ?> - Admin Panel</title>
+    <title>Menaxho Portfolion - Admin Panel</title>
     <link rel="stylesheet" href="../dist/css/output.css">
     <link rel="stylesheet" href="../assets/fontawesome/all.min.css">
-    <script src="js/media-picker.js"></script>
+    <script>
+        function openModal(mode, data = null) {
+            const modal = document.getElementById('projectModal');
+            const form = document.getElementById('projectForm');
+            const title = document.getElementById('modalTitle');
+            const btn = document.getElementById('modalBtn');
+            
+            modal.classList.remove('hidden');
+            
+            if (mode === 'edit' && data) {
+                title.textContent = 'Ndrysho Projektin';
+                btn.textContent = 'Ruaj Ndryshimet';
+                form.elements['action'].value = 'update';
+                form.elements['id'].value = data.id;
+                form.elements['title'].value = data.title;
+                form.elements['description'].value = data.description;
+                form.elements['type'].value = data.type;
+                form.elements['date'].value = data.date;
+                form.elements['image'].value = data.image;
+                form.elements['active'].checked = data.active == 1;
+                
+                document.getElementById('image_preview').src = data.image ? '../' + data.image : 'assets/img/placeholder.png';
+            } else {
+                title.textContent = 'Shto Projekt të Ri';
+                btn.textContent = 'Krijo Projekt';
+                form.reset();
+                form.elements['action'].value = 'create';
+                form.elements['id'].value = '';
+                form.elements['date'].value = new Date().toISOString().split('T')[0];
+                document.getElementById('image_preview').src = 'assets/img/placeholder.png';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('projectModal').classList.add('hidden');
+        }
+    </script>
 </head>
-<body class="bg-gray-100">
-    <?php include 'includes/sidebar.php'; ?>
-    <?php include 'includes/header.php'; ?>
-
-    <div class="ml-64 pt-16 p-6">
-        <?php if ($message): ?>
-            <div class="bg-<?php echo $messageType === 'success' ? 'green' : 'red'; ?>-100 border border-<?php echo $messageType === 'success' ? 'green' : 'red'; ?>-400 text-<?php echo $messageType === 'success' ? 'green' : 'red'; ?>-700 px-4 py-3 rounded mb-4 flex items-center justify-between">
-                <span>
-                    <i class="fas fa-<?php echo $messageType === 'success' ? 'check-circle' : 'exclamation-circle'; ?> mr-2"></i>
-                    <?php echo htmlspecialchars($message); ?>
-                </span>
-                <a href="../index.html" target="_blank" class="text-<?php echo $messageType === 'success' ? 'green' : 'red'; ?>-700 hover:underline font-semibold">
-                    <i class="fas fa-external-link-alt mr-1"></i>Seite ansehen
-                </a>
-            </div>
-        <?php endif; ?>
-
-        <!-- Projekte Settings -->
-        <div class="bg-white rounded-lg shadow p-6 mb-8">
-            <h2 class="text-xl font-bold mb-4 flex items-center">
-                <i class="fas fa-briefcase text-primary mr-2"></i>
-                Projekte Einstellungen
-            </h2>
-            <form method="POST" class="space-y-6">
-                <input type="hidden" name="action" value="save_settings">
-                
-                <!-- SECTION 1: INDEX.HTML ONLY -->
-                <div class="bg-blue-50 border-l-4 border-primary p-4 rounded-lg">
-                    <div class="flex items-center mb-4">
-                        <i class="fas fa-home text-primary mr-2"></i>
-                        <h3 class="text-lg font-bold text-primary">NUR FÜR INDEX.HTML</h3>
-                        <span class="ml-2 text-xs bg-primary text-white px-2 py-1 rounded">*</span>
-                    </div>
-                    
-                    <div class="space-y-4">
-                        <div class="flex items-center space-x-4 pt-2">
-                            <label class="flex items-center">
-                                <span class="text-primary font-bold mr-1">*</span>
-                                <input type="checkbox" name="portfolio_show_in_index" <?php echo ($customization['portfolio']['show_in_index'] ?? false) ? 'checked' : ''; ?> class="mr-2">
-                                <span class="text-sm">Projekte im Index anzeigen</span>
-                            </label>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">
-                                <span class="text-primary font-bold mr-1">*</span>Max Items im Index
-                            </label>
-                            <input type="number" name="portfolio_max_items_index" value="<?php echo $customization['portfolio']['max_items_index'] ?? 6; ?>" 
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">
-                                <span class="text-primary font-bold mr-1">*</span>Titel im Index
-                            </label>
-                            <input type="text" name="portfolio_index_title" value="<?php echo htmlspecialchars($customization['portfolio']['index_title'] ?? 'Unser Baujournal'); ?>" 
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">
-                                <span class="text-primary font-bold mr-1">*</span>Beschreibung im Index
-                            </label>
-                            <textarea name="portfolio_index_description" rows="2" 
-                                      class="w-full px-4 py-2 border border-gray-300 rounded-lg"><?php echo htmlspecialchars($customization['portfolio']['index_description'] ?? 'Eine Auswahl unserer erfolgreich abgeschlossenen Projekte'); ?></textarea>
-                        </div>
-                    </div>
+<body class="bg-gray-100 font-sans text-gray-900">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="w-64 flex-shrink-0 bg-white border-r border-gray-200">
+            <?php include 'includes/sidebar.php'; ?>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+            <!-- Header -->
+            <header class="bg-white shadow-sm z-10 h-16 flex items-center justify-between px-6 border-b border-gray-200">
+                <div class="flex items-center">
+                    <h1 class="text-xl font-bold text-gray-800 flex items-center">
+                        <span class="bg-indigo-100 p-2 rounded-lg mr-3">
+                            <i class="fas fa-briefcase text-indigo-600"></i>
+                        </span>
+                        Portfolio (Projekte)
+                    </h1>
                 </div>
-
-                <!-- SECTION 2: PORTFOLIO.HTML ONLY -->
-                <div class="bg-gray-50 border-l-4 border-gray-600 p-4 rounded-lg">
-                    <div class="flex items-center mb-4">
-                        <i class="fas fa-file-alt text-gray-600 mr-2"></i>
-                        <h3 class="text-lg font-bold text-gray-700">NUR FÜR PORTFOLIO.HTML</h3>
-                    </div>
-                    
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Hero Section</label>
-                            <div class="space-y-3">
-                                <input type="text" name="portfolio_hero_image" data-media-picker="image" placeholder="Hero Image URL"
-                                       value="<?php echo htmlspecialchars($customization['portfolio']['hero_image'] ?? ''); ?>" 
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                                <input type="text" name="portfolio_full_title" placeholder="Hero Title"
-                                       value="<?php echo htmlspecialchars($customization['portfolio']['full_title'] ?? 'Unsere Projekte'); ?>" 
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                                <textarea name="portfolio_full_description" rows="2" placeholder="Hero Description"
-                                          class="w-full px-4 py-2 border border-gray-300 rounded-lg"><?php echo htmlspecialchars($customization['portfolio']['full_description'] ?? 'Sehen Sie sich unsere vollständige Projektsammlung an'); ?></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <button type="submit" class="bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-900 font-semibold text-lg shadow-lg hover:shadow-xl transition-all">
-                    <i class="fas fa-save mr-2"></i>Einstellungen speichern
+                <button onclick="openModal('create')" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg shadow-lg transform hover:-translate-y-0.5 transition-all text-sm">
+                    <i class="fas fa-plus mr-2"></i> Shto Projekt
                 </button>
-            </form>
-        </div>
+            </header>
+            
+            <!-- Scrollable Content -->
+            <main class="flex-1 overflow-y-auto bg-gray-50 p-6 md:p-8">
+                
+                <?php if ($message): ?>
+                    <div class="mb-6 p-4 rounded-lg <?php echo $messageType === 'success' ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-red-100 text-red-700 border border-red-200'; ?> flex items-center shadow-sm animate-fade-in">
+                        <div class="flex-shrink-0 mr-3">
+                            <i class="fas <?php echo $messageType === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'; ?> text-xl"></i>
+                        </div>
+                        <span class="font-medium"><?php echo $message; ?></span>
+                    </div>
+                <?php endif; ?>
 
-        <!-- Neues Projekt hinzufügen -->
-        <div class="bg-white rounded-lg shadow p-6 mb-8">
-            <h2 class="text-xl font-bold mb-4 flex items-center">
-                <i class="fas fa-plus-circle text-primary mr-2"></i>
-                Neues Projekt hinzufügen
-            </h2>
-            <form method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input type="hidden" name="action" value="add_project">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2"><span class="text-primary font-bold mr-1">*</span>Titel</label>
-                    <input type="text" name="title" required placeholder="z.B. Badezimmer Renovierung" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Datum</label>
-                    <input type="text" name="date" placeholder="z.B. 2025" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                </div>
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-2"><span class="text-primary font-bold mr-1">*</span>Bild URL</label>
-                    <input type="text" name="image" data-media-picker="image" placeholder="uploads/projekt.png" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                </div>
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Beschreibung</label>
-                    <textarea name="description" rows="3" placeholder="Projekt Beschreibung" class="w-full px-4 py-2 border border-gray-300 rounded-lg"></textarea>
-                </div>
-                <div>
-                    <label class="flex items-center space-x-2">
-                        <input type="checkbox" name="active" checked>
-                        <span>Aktiv</span>
-                    </label>
-                </div>
-                <div>
-                    <button type="submit" class="w-full bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-900 font-semibold text-lg shadow-lg hover:shadow-xl transition-all">
-                        <i class="fas fa-save mr-2"></i>Projekt speichern
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Projekt Liste -->
-        <div class="bg-white rounded-lg shadow p-6 mb-8">
-            <h2 class="text-xl font-bold mb-4 flex items-center">
-                <i class="fas fa-list text-primary mr-2"></i>
-                Projekt Liste (<?php echo count($projects['projects']); ?>)
-            </h2>
-
-            <?php if (empty($projects['projects'])): ?>
-                <p class="text-gray-500 text-center py-8">Derzeit sind keine Projekte verfügbar.</p>
-            <?php else: ?>
-                <div class="space-y-2">
-                    <?php foreach ($projects['projects'] as $index => $proj): ?>
-                        <div class="border rounded-lg overflow-hidden">
-                            <!-- Header - Always Visible -->
-                            <div class="bg-white p-3 flex items-center justify-between hover:bg-gray-50 transition-colors">
-                                <div class="flex items-center space-x-3 flex-1">
-                                    <button onclick="toggleProject(<?php echo $index; ?>)" 
-                                            class="text-gray-600 hover:text-primary transition-colors">
-                                        <i id="project-icon-<?php echo $index; ?>" class="fas fa-chevron-down transition-transform"></i>
-                                    </button>
-                                    <h3 class="text-lg font-semibold text-gray-900"><?php echo htmlspecialchars($proj['title']); ?></h3>
-                                    <span class="px-2 py-1 rounded text-xs <?php echo !isset($proj['active']) || $proj['active'] ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'; ?>">
-                                        <?php echo !isset($proj['active']) || $proj['active'] ? 'Aktiv' : 'Inaktiv'; ?>
-                                    </span>
-                                    <?php if (!empty($proj['date'])): ?>
-                                        <span class="text-sm text-gray-500">
-                                            <i class="fas fa-calendar mr-1"></i><?php echo htmlspecialchars($proj['date']); ?>
+                <!-- Projects Grid -->
+                <?php if (empty($projects)): ?>
+                    <div class="text-center py-12 bg-white rounded-xl shadow-sm border border-gray-200">
+                        <div class="text-gray-400 mb-4">
+                            <i class="fas fa-folder-open text-6xl"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-900">Nuk ka projekte</h3>
+                        <p class="text-gray-500 mt-1">Shtoni projektet tuaja të realizuara.</p>
+                    </div>
+                <?php else: ?>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        <?php foreach ($projects as $proj): ?>
+                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow group relative flex flex-col">
+                                <div class="relative h-48 bg-gray-100">
+                                    <img src="../<?php echo !empty($proj['image']) ? htmlspecialchars($proj['image']) : 'assets/img/placeholder.png'; ?>" 
+                                         class="w-full h-full object-cover">
+                                    
+                                    <div class="absolute top-2 right-2">
+                                        <span class="bg-white/90 text-gray-800 text-xs font-bold px-2 py-1 rounded shadow-sm uppercase tracking-wide">
+                                            <?php echo htmlspecialchars($proj['type']); ?>
                                         </span>
-                                    <?php endif; ?>
-                                </div>
-                                <div class="flex space-x-2">
-                                    <button onclick="editProject(<?php echo htmlspecialchars(json_encode($proj)); ?>)" 
-                                            class="bg-blue-500 text-white px-3 py-1.5 rounded text-sm hover:bg-blue-600 transition-colors">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <form method="POST" class="inline" onsubmit="return confirm('Sind Sie sicher, dass Sie löschen möchten?');">
-                                        <input type="hidden" name="action" value="delete_project">
-                                        <input type="hidden" name="id" value="<?php echo $proj['id']; ?>">
-                                        <button type="submit" class="bg-red-500 text-white px-3 py-1.5 rounded text-sm hover:bg-red-600 transition-colors">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                            
-                            <!-- Collapsible Content -->
-                            <div id="project-content-<?php echo $index; ?>" class="hidden border-t bg-gray-50">
-                                <div class="p-4 space-y-4">
-                                    <!-- Project Info -->
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                                        <?php if (!empty($proj['date'])): ?>
-                                            <div>
-                                                <span class="font-semibold text-gray-700">Datum:</span>
-                                                <span class="text-gray-600 ml-2"><?php echo htmlspecialchars($proj['date']); ?></span>
-                                            </div>
-                                        <?php endif; ?>
-                                        <?php if (!empty($proj['description'])): ?>
-                                            <div class="md:col-span-2">
-                                                <span class="font-semibold text-gray-700">Beschreibung:</span>
-                                                <p class="text-gray-600 mt-1"><?php echo htmlspecialchars($proj['description']); ?></p>
-                                            </div>
-                                        <?php endif; ?>
-                                        <?php if (!empty($proj['path'])): ?>
-                                            <div class="md:col-span-2">
-                                                <span class="font-semibold text-gray-700">Bild:</span>
-                                                <img src="../<?php echo htmlspecialchars($proj['path']); ?>" 
-                                                     alt="<?php echo htmlspecialchars($proj['title']); ?>"
-                                                     class="w-32 h-32 object-cover rounded mt-2 border">
-                                            </div>
-                                        <?php endif; ?>
                                     </div>
 
-                                    <!-- Edit Form -->
-                                    <div class="bg-white p-4 rounded-lg border">
-                                        <h4 class="font-semibold mb-3">Projekt bearbeiten</h4>
-                                        <form method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                            <input type="hidden" name="action" value="edit_project">
+                                    <?php if (!$proj['active']): ?>
+                                        <div class="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center">
+                                            <span class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm font-bold border border-gray-300">Jo Aktiv</span>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                                
+                                <div class="p-4 flex-1 flex flex-col">
+                                    <h3 class="text-lg font-bold text-gray-900 mb-1 truncate"><?php echo htmlspecialchars($proj['title']); ?></h3>
+                                    <div class="text-xs text-gray-500 mb-3 flex items-center">
+                                        <i class="far fa-calendar-alt mr-1"></i> 
+                                        <?php echo date('d.m.Y', strtotime($proj['date'])); ?>
+                                    </div>
+                                    <p class="text-gray-600 text-sm line-clamp-2 mb-4 flex-1"><?php echo htmlspecialchars($proj['description']); ?></p>
+                                    
+                                    <div class="flex justify-end gap-2 pt-3 border-t border-gray-100 mt-auto">
+                                        <button onclick='openModal("edit", <?php echo json_encode($proj); ?>)' class="bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">
+                                            <i class="fas fa-edit mr-1"></i>
+                                        </button>
+                                        <form method="POST" onsubmit="return confirm('Fshi projektin?');" class="inline">
+                                            <input type="hidden" name="action" value="delete">
                                             <input type="hidden" name="id" value="<?php echo $proj['id']; ?>">
-                                            <div>
-                                                <label class="block text-xs text-gray-600 mb-1">Titel</label>
-                                                <input type="text" name="title" value="<?php echo htmlspecialchars($proj['title']); ?>" class="w-full px-3 py-2 border border-gray-300 rounded text-sm">
-                                            </div>
-                                            <div>
-                                                <label class="block text-xs text-gray-600 mb-1">Datum</label>
-                                                <input type="text" name="date" value="<?php echo htmlspecialchars($proj['date'] ?? ''); ?>" class="w-full px-3 py-2 border border-gray-300 rounded text-sm">
-                                            </div>
-                                            <div class="md:col-span-2">
-                                                <label class="block text-xs text-gray-600 mb-1">Bild URL</label>
-                                                <input type="text" name="image" value="<?php echo htmlspecialchars($proj['path'] ?? ''); ?>" class="w-full px-3 py-2 border border-gray-300 rounded text-sm" data-media-picker="image">
-                                            </div>
-                                            <div class="md:col-span-2">
-                                                <label class="block text-xs text-gray-600 mb-1">Beschreibung</label>
-                                                <textarea name="description" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded text-sm"><?php echo htmlspecialchars($proj['description'] ?? ''); ?></textarea>
-                                            </div>
-                                            <div class="flex items-center space-x-2">
-                                                <input type="checkbox" name="active" <?php echo (!isset($proj['active']) || $proj['active']) ? 'checked' : ''; ?>>
-                                                <span class="text-sm">Aktiv</span>
-                                            </div>
-                                            <div>
-                                                <button type="submit" class="w-full bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 font-semibold text-sm">
-                                                    <i class="fas fa-save mr-1"></i>Speichern
-                                                </button>
-                                            </div>
+                                            <button type="submit" class="bg-red-50 text-red-600 hover:bg-red-100 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">
+                                                <i class="fas fa-trash-alt mr-1"></i>
+                                            </button>
                                         </form>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </main>
         </div>
     </div>
 
-    <!-- Edit Project Modal -->
-    <div id="editProjectModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-lg p-6 max-w-2xl w-full mx-4">
-            <h2 class="text-xl font-bold mb-4">Projekt bearbeiten</h2>
-            <form method="POST" id="editProjectForm">
-                <input type="hidden" name="action" value="edit_project">
-                <input type="hidden" name="id" id="editProjectId">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Modal -->
+    <div id="projectModal" class="fixed inset-0 bg-black/50 z-50 hidden backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center p-6 border-b border-gray-100">
+                <h3 class="text-xl font-bold text-gray-900" id="modalTitle">Shto Projekt</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 rounded-lg p-1 hover:bg-gray-100 transition-colors">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <form id="projectForm" method="POST" class="p-6 space-y-6">
+                <input type="hidden" name="action" value="create">
+                <input type="hidden" name="id" value="">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Titulli i Projektit</label>
+                        <input type="text" name="title" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors">
+                    </div>
+                    
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Përshkrimi</label>
+                        <textarea name="description" rows="3" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"></textarea>
+                    </div>
+
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Titel</label>
-                        <input type="text" name="title" id="editProjectTitle" required
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Kategoria</label>
+                        <select name="type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white">
+                            <option value="residential">Rezidenciale</option>
+                            <option value="commercial">Komerciale</option>
+                            <option value="renovation">Renovim</option>
+                            <option value="other">Tjetër</option>
+                        </select>
                     </div>
+
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Datum</label>
-                        <input type="text" name="date" id="editProjectDate"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Data e Përfundimit</label>
+                        <input type="date" name="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary">
                     </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Bild URL</label>
-                        <input type="text" name="image" id="editProjectImage" data-media-picker="image" required
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Foto e Projektit</label>
+                        <div class="relative group cursor-pointer border-2 border-dashed border-gray-300 rounded-lg hover:border-primary transition-colors bg-gray-50 p-1" onclick="openMediaPicker('modal_image')">
+                            <img src="assets/img/placeholder.png" id="image_preview" class="w-full h-48 object-cover rounded">
+                            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10">
+                                <span class="bg-white text-gray-800 text-xs font-bold px-2 py-1 rounded shadow">Zgjidh</span>
+                            </div>
+                        </div>
+                        <input type="hidden" id="modal_image" name="image">
                     </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Beschreibung</label>
-                        <textarea name="description" id="editProjectDescription" rows="3"
-                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg"></textarea>
-                    </div>
-                    <div>
-                        <label class="flex items-center space-x-2">
-                            <input type="checkbox" name="active" id="editProjectActive">
-                            <span>Aktiv</span>
+                    
+                    <div class="col-span-2 pt-2">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="checkbox" name="active" class="form-checkbox h-5 w-5 text-primary rounded border-gray-300 focus:ring-primary">
+                            <span class="ml-2 text-gray-700 font-medium">Projekt Aktiv</span>
                         </label>
                     </div>
                 </div>
-                <div class="flex justify-end space-x-2 mt-4">
-                    <button type="button" onclick="closeEditProjectModal()" 
-                            class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                        Abbrechen
+
+                <div class="flex justify-end gap-3 pt-4 border-t border-gray-100">
+                    <button type="button" onclick="closeModal()" class="px-5 py-2.5 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-colors">
+                        Anulo
                     </button>
-                    <button type="submit" class="px-6 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-900 font-semibold shadow-lg hover:shadow-xl transition-all">
-                        <i class="fas fa-save mr-2"></i>Änderungen speichern
+                    <button type="submit" id="modalBtn" class="bg-primary hover:bg-primary-dark text-white font-bold py-2.5 px-6 rounded-lg shadow-lg transform hover:-translate-y-0.5 transition-all">
+                        Krijo Projekt
                     </button>
                 </div>
             </form>
         </div>
     </div>
 
-    <script>
-        function toggleProject(index) {
-            const content = document.getElementById('project-content-' + index);
-            const icon = document.getElementById('project-icon-' + index);
-            
-            if (content.classList.contains('hidden')) {
-                content.classList.remove('hidden');
-                icon.classList.remove('fa-chevron-down');
-                icon.classList.add('fa-chevron-up');
-            } else {
-                content.classList.add('hidden');
-                icon.classList.remove('fa-chevron-up');
-                icon.classList.add('fa-chevron-down');
-            }
-        }
-        
-        function editProject(project) {
-            document.getElementById('editProjectId').value = project.id;
-            document.getElementById('editProjectTitle').value = project.title;
-            document.getElementById('editProjectDate').value = project.date || '';
-            document.getElementById('editProjectImage').value = project.path || '';
-            document.getElementById('editProjectDescription').value = project.description || '';
-            document.getElementById('editProjectActive').checked = project.active !== false;
-            document.getElementById('editProjectModal').classList.remove('hidden');
-        }
-
-        function closeEditProjectModal() {
-            document.getElementById('editProjectModal').classList.add('hidden');
-        }
-    </script>
+    <script src="js/media-picker.js"></script>
 </body>
 </html>
-
