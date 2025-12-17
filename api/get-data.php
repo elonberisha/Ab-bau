@@ -44,16 +44,26 @@ try {
         
         case 'catalogs':
             try {
-            $stmt = $pdo->query("SELECT * FROM catalogs WHERE active = 1 ORDER BY sort_order ASC");
-            $catalogs = $stmt->fetchAll();
+                $stmt = $pdo->query("SELECT * FROM catalogs WHERE active = 1 ORDER BY sort_order ASC");
+                $catalogs = $stmt->fetchAll();
                 if ($catalogs) {
-            foreach ($catalogs as &$catalog) {
-                $pStmt = $pdo->prepare("SELECT * FROM catalog_products WHERE catalog_id = :cid AND active = 1 ORDER BY sort_order ASC");
-                $pStmt->execute(['cid' => $catalog['id']]);
-                $catalog['products'] = $pStmt->fetchAll();
-            }
+                    foreach ($catalogs as &$catalog) {
+                        $pStmt = $pdo->prepare("SELECT * FROM catalog_products WHERE catalog_id = :cid AND active = 1 ORDER BY sort_order ASC");
+                        $pStmt->execute(['cid' => $catalog['id']]);
+                        $catalog['products'] = $pStmt->fetchAll();
+                    }
                 }
                 echo json_encode($catalogs ? $catalogs : []);
+            } catch (PDOException $e) {
+                echo json_encode([]);
+            }
+            break;
+        
+        case 'partners':
+            try {
+                $stmt = $pdo->query("SELECT * FROM partners WHERE active = 1 ORDER BY sort_order ASC, id DESC");
+                $partners = $stmt->fetchAll();
+                echo json_encode($partners ? $partners : []);
             } catch (PDOException $e) {
                 echo json_encode([]);
             }

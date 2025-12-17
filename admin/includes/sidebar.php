@@ -52,6 +52,11 @@ $avatarLetter = strtoupper(substr($username, 0, 1));
                 <span class="font-medium">Kataloge</span>
             </a>
             
+            <a href="partners.php" class="flex items-center space-x-3 px-3 py-2 rounded-lg transition-all duration-200 text-sm <?php echo $currentPage === 'partners.php' ? 'bg-primary text-white shadow-md' : 'text-gray-400 hover:bg-gray-800 hover:text-white'; ?>">
+                <i class="fas fa-handshake w-5 text-center text-sm"></i>
+                <span class="font-medium">Partner</span>
+            </a>
+            
             <a href="projekte.php" class="flex items-center space-x-3 px-3 py-2 rounded-lg transition-all duration-200 text-sm <?php echo $currentPage === 'projekte.php' ? 'bg-primary text-white shadow-md' : 'text-gray-400 hover:bg-gray-800 hover:text-white'; ?>">
                 <i class="fas fa-project-diagram w-5 text-center text-sm"></i>
                 <span class="font-medium">Projekte</span>
