@@ -33,6 +33,7 @@ desktop.ini
 # Admin panel temporary files
 admin/last_otp.txt
 admin/2fa.txt
+admin/emails.txt
 admin/*.txt
 !admin/README.md
 

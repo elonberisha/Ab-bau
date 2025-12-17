@@ -48,6 +48,11 @@ function sendEmailSMTP($to, $subject, $message, $fromEmail = null, $fromName = n
     $fromEmail = $fromEmail ?: SMTP_FROM_EMAIL;
     $fromName = $fromName ?: SMTP_FROM_NAME;
     
+    // For Gmail, use SMTP_USERNAME as FROM if not specified
+    if ($fromEmail === SMTP_FROM_EMAIL && SMTP_HOST === 'smtp.gmail.com') {
+        $fromEmail = SMTP_USERNAME; // Gmail requires FROM to match authenticated user
+    }
+    
     // Use stream_socket_client for better connection handling
     $context = stream_context_create();
     $smtp = @stream_socket_client(
@@ -75,9 +80,17 @@ function sendEmailSMTP($to, $subject, $message, $fromEmail = null, $fromName = n
         return false;
     }
     
+    // Get hostname for EHLO
+    $hostname = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost';
+    
     // Send EHLO
-    fputs($smtp, "EHLO " . $_SERVER['HTTP_HOST'] . "\r\n");
-    $response = fgets($smtp, 515);
+    fputs($smtp, "EHLO " . $hostname . "\r\n");
+    $response = '';
+    // Read all EHLO responses (multi-line)
+    while ($line = fgets($smtp, 515)) {
+        $response .= $line;
+        if (substr($line, 3, 1) == ' ') break; // Last line of response
+    }
     
     // Start TLS if needed
     if (SMTP_SECURE === 'tls') {
@@ -96,8 +109,13 @@ function sendEmailSMTP($to, $subject, $message, $fromEmail = null, $fromName = n
         }
         
         // Send EHLO again after TLS
-        fputs($smtp, "EHLO " . $_SERVER['HTTP_HOST'] . "\r\n");
-        $response = fgets($smtp, 515);
+        fputs($smtp, "EHLO " . $hostname . "\r\n");
+        $response = '';
+        // Read all EHLO responses (multi-line)
+        while ($line = fgets($smtp, 515)) {
+            $response .= $line;
+            if (substr($line, 3, 1) == ' ') break; // Last line of response
+        }
     }
     
     // Authenticate
@@ -165,38 +183,54 @@ function sendEmailSMTP($to, $subject, $message, $fromEmail = null, $fromName = n
     fputs($smtp, $emailData);
     $response = fgets($smtp, 515);
     
+    $success = strpos($response, '250') !== false;
+    
+    if (!$success) {
+        error_log("SMTP Email send failed. Response: $response");
+    }
+    
     // Quit
     fputs($smtp, "QUIT\r\n");
     fclose($smtp);
     
-    return strpos($response, '250') !== false;
+    return $success;
 }
 
 /**
  * Simple email sending function (wrapper)
  * Falls back to file writing if SMTP fails (for local development)
  */
-function sendEmail($to, $subject, $message, $fromEmail = null, $fromName = null, $writeToFile = true) {
+function sendEmail($to, $subject, $message, $fromEmail = null, $fromName = null, $writeToFile = false) {
     $result = sendEmailSMTP($to, $subject, $message, $fromEmail, $fromName);
     
-    // If SMTP fails and we're in local development, write to file
-    if (!$result && $writeToFile) {
-        $emailFile = __DIR__ . '/../emails.txt';
+    // If SMTP succeeds, return true
+    if ($result) {
+        return true;
+    }
+    
+    // If SMTP fails and writeToFile is enabled, write to file as fallback
+    if ($writeToFile) {
+        $emailFile = __DIR__ . '/emails.txt';
         $emailContent = "\n" . str_repeat("=", 60) . "\n";
         $emailContent .= "TO: $to\n";
         $emailContent .= "SUBJECT: $subject\n";
         $emailContent .= "FROM: " . ($fromEmail ?: SMTP_FROM_EMAIL) . "\n";
         $emailContent .= "DATE: " . date('Y-m-d H:i:s') . "\n";
+        $emailContent .= "SMTP STATUS: FAILED (written to file)\n";
         $emailContent .= str_repeat("-", 60) . "\n";
         $emailContent .= $message . "\n";
         $emailContent .= str_repeat("=", 60) . "\n";
         
         file_put_contents($emailFile, $emailContent, FILE_APPEND);
         
+        // Log error for debugging
+        error_log("SMTP failed, email written to: $emailFile");
+        
         return true; // Return true so the system thinks email was sent
     }
     
-    return $result;
+    // If SMTP fails and writeToFile is disabled, return false
+    return false;
 }
 ?>
 

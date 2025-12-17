@@ -2,6 +2,12 @@
 header('Content-Type: application/json');
 require_once __DIR__ . '/../admin/includes/db_connect.php';
 
+// Check if database connection exists
+if (!isset($pdo)) {
+    echo json_encode(['success' => false, 'message' => 'Database connection failed']);
+    exit;
+}
+
 // Only allow POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);

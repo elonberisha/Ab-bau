@@ -2,7 +2,11 @@
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
-require_once __DIR__ . '/../admin/includes/db_connect.php';
+// Check if database connection exists before proceeding
+if (!isset($pdo)) {
+    echo json_encode(['error' => 'Database connection failed']);
+    exit;
+}
 
 $type = $_GET['type'] ?? '';
 
