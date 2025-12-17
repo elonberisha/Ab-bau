@@ -17,42 +17,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action'])) {
         // --- PARTNER CRUD ---
         if ($_POST['action'] === 'create' || $_POST['action'] === 'update') {
-            $name = sanitize($_POST['name']);
-            $logo = sanitize($_POST['logo']);
-            $website = sanitize($_POST['website']);
-            $description = sanitize($_POST['description']);
-            $active = isset($_POST['active']) ? 1 : 0;
-            $sort_order = (int)($_POST['sort_order'] ?? 0);
-            
-            if ($_POST['action'] === 'create') {
-                $stmt = $pdo->prepare("INSERT INTO partners (name, logo, website, description, active, sort_order) VALUES (:name, :logo, :website, :desc, :active, :sort_order)");
-                if ($stmt->execute(['name' => $name, 'logo' => $logo, 'website' => $website, 'desc' => $description, 'active' => $active, 'sort_order' => $sort_order])) {
-                    $_SESSION['message'] = 'Partner wurde erfolgreich hinzugefügt!';
-                    $_SESSION['message_type'] = 'success';
+            try {
+                $name = sanitize($_POST['name']);
+                $logo = sanitize($_POST['logo']);
+                $website = sanitize($_POST['website']);
+                $description = sanitize($_POST['description']);
+                $active = isset($_POST['active']) ? 1 : 0;
+                $sort_order = (int)($_POST['sort_order'] ?? 0);
+                
+                if ($_POST['action'] === 'create') {
+                    $stmt = $pdo->prepare("INSERT INTO partners (name, logo, website, description, active, sort_order) VALUES (:name, :logo, :website, :desc, :active, :sort_order)");
+                    if ($stmt->execute(['name' => $name, 'logo' => $logo, 'website' => $website, 'desc' => $description, 'active' => $active, 'sort_order' => $sort_order])) {
+                        $_SESSION['message'] = 'Partner wurde erfolgreich hinzugefügt!';
+                        $_SESSION['message_type'] = 'success';
+                    } else {
+                        $_SESSION['message'] = 'Fehler beim Hinzufügen.';
+                        $_SESSION['message_type'] = 'error';
+                    }
                 } else {
-                    $_SESSION['message'] = 'Fehler beim Hinzufügen.';
-                    $_SESSION['message_type'] = 'error';
+                    $id = (int)$_POST['id'];
+                    $stmt = $pdo->prepare("UPDATE partners SET name = :name, logo = :logo, website = :website, description = :desc, active = :active, sort_order = :sort_order WHERE id = :id");
+                    if ($stmt->execute(['name' => $name, 'logo' => $logo, 'website' => $website, 'desc' => $description, 'active' => $active, 'sort_order' => $sort_order, 'id' => $id])) {
+                        $_SESSION['message'] = 'Partner wurde erfolgreich aktualisiert!';
+                        $_SESSION['message_type'] = 'success';
+                    } else {
+                        $_SESSION['message'] = 'Fehler beim Aktualisieren.';
+                        $_SESSION['message_type'] = 'error';
+                    }
                 }
-            } else {
-                $id = (int)$_POST['id'];
-                $stmt = $pdo->prepare("UPDATE partners SET name = :name, logo = :logo, website = :website, description = :desc, active = :active, sort_order = :sort_order WHERE id = :id");
-                if ($stmt->execute(['name' => $name, 'logo' => $logo, 'website' => $website, 'desc' => $description, 'active' => $active, 'sort_order' => $sort_order, 'id' => $id])) {
-                    $_SESSION['message'] = 'Partner wurde erfolgreich aktualisiert!';
-                    $_SESSION['message_type'] = 'success';
-                } else {
-                    $_SESSION['message'] = 'Fehler beim Aktualisieren.';
-                    $_SESSION['message_type'] = 'error';
-                }
+            } catch (PDOException $e) {
+                $_SESSION['message'] = 'Fehler: ' . $e->getMessage();
+                $_SESSION['message_type'] = 'error';
+                error_log("Partners CRUD error: " . $e->getMessage());
             }
         } elseif ($_POST['action'] === 'delete') {
-            $id = (int)$_POST['id'];
-            $stmt = $pdo->prepare("DELETE FROM partners WHERE id = :id");
-            if ($stmt->execute(['id' => $id])) {
-                $_SESSION['message'] = 'Partner wurde erfolgreich gelöscht!';
-                $_SESSION['message_type'] = 'success';
-            } else {
-                $_SESSION['message'] = 'Fehler beim Löschen.';
+            try {
+                $id = (int)$_POST['id'];
+                $stmt = $pdo->prepare("DELETE FROM partners WHERE id = :id");
+                if ($stmt->execute(['id' => $id])) {
+                    $_SESSION['message'] = 'Partner wurde erfolgreich gelöscht!';
+                    $_SESSION['message_type'] = 'success';
+                } else {
+                    $_SESSION['message'] = 'Fehler beim Löschen.';
+                    $_SESSION['message_type'] = 'error';
+                }
+            } catch (PDOException $e) {
+                $_SESSION['message'] = 'Fehler beim Löschen: ' . $e->getMessage();
                 $_SESSION['message_type'] = 'error';
+                error_log("Partners delete error: " . $e->getMessage());
             }
         }
         
@@ -62,7 +74,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Fetch Partners
-$partners = $pdo->query("SELECT * FROM partners ORDER BY sort_order ASC, id DESC")->fetchAll();
+try {
+    $partners = $pdo->query("SELECT * FROM partners ORDER BY sort_order ASC, id DESC")->fetchAll();
+} catch (PDOException $e) {
+    // If table doesn't exist, show empty array and message
+    $partners = [];
+    if (empty($message)) {
+        $message = 'Die Tabelle "partners" existiert noch nicht. Bitte führen Sie zuerst die SQL-Query aus (database/partners_table.sql).';
+        $messageType = 'error';
+    }
+    error_log("Partners table error: " . $e->getMessage());
+}
 ?>
 <!DOCTYPE html>
 <html lang="de">
