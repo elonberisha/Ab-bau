@@ -1062,15 +1062,15 @@
                 container.innerHTML = partners.map((partner, index) => {
                     const logoPath = partner.logo ? (partner.logo.startsWith('http') ? partner.logo : partner.logo) : '';
                     const logoHtml = logoPath 
-                        ? `<img src="${logoPath}" alt="${partner.name || 'Partner'}" class="w-full h-full object-contain p-2 opacity-70 hover:opacity-100 transition-opacity duration-300" loading="lazy">`
+                        ? `<img src="${logoPath}" alt="${partner.name || 'Partner'}" class="w-full h-full object-contain opacity-70 hover:opacity-100 transition-opacity duration-300" loading="lazy">`
                         : `<div class="w-full h-full flex items-center justify-center text-gray-400"><i class="fas fa-handshake text-2xl"></i></div>`;
                     
                     const linkHtml = partner.website 
-                        ? `<a href="${partner.website}" target="_blank" rel="noopener noreferrer" class="block w-full h-full" title="${partner.name || 'Partner'}">${logoHtml}</a>`
-                        : `<div class="block w-full h-full" title="${partner.name || 'Partner'}">${logoHtml}</div>`;
+                        ? `<a href="${partner.website}" target="_blank" rel="noopener noreferrer" class="block w-full h-full flex items-center justify-center" title="${partner.name || 'Partner'}">${logoHtml}</a>`
+                        : `<div class="block w-full h-full flex items-center justify-center" title="${partner.name || 'Partner'}">${logoHtml}</div>`;
                     
                     return `
-                        <div class="bg-white rounded-lg p-3 sm:p-4 border border-gray-200 hover:border-primary hover:shadow-md transition-all duration-300 h-24 sm:h-28 flex items-center justify-center" data-aos="fade-up" data-aos-delay="${index * 50}">
+                        <div class="bg-white rounded-lg p-4 sm:p-6 hover:shadow-lg transition-all duration-300 h-24 sm:h-28 flex items-center justify-center" data-aos="fade-up" data-aos-delay="${index * 50}">
                             ${linkHtml}
                         </div>
                     `;
