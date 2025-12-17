@@ -2,6 +2,9 @@
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
+// Include database connection
+require_once __DIR__ . '/../admin/includes/db_connect.php';
+
 // Check if database connection exists before proceeding
 if (!isset($pdo)) {
     echo json_encode(['error' => 'Database connection failed']);
@@ -31,7 +34,7 @@ try {
         
         case 'reviews':
             try {
-                $stmt = $pdo->query("SELECT name, message, rating, DATE_FORMAT(date, '%Y-%m-%d') as date FROM reviews WHERE status = 'approved' ORDER BY date DESC");
+            $stmt = $pdo->query("SELECT name, message, rating, DATE_FORMAT(date, '%Y-%m-%d') as date FROM reviews WHERE status = 'approved' ORDER BY date DESC");
                 $reviews = $stmt->fetchAll();
                 echo json_encode($reviews ? $reviews : []);
             } catch (PDOException $e) {
@@ -41,14 +44,14 @@ try {
         
         case 'catalogs':
             try {
-                $stmt = $pdo->query("SELECT * FROM catalogs WHERE active = 1 ORDER BY sort_order ASC");
-                $catalogs = $stmt->fetchAll();
+            $stmt = $pdo->query("SELECT * FROM catalogs WHERE active = 1 ORDER BY sort_order ASC");
+            $catalogs = $stmt->fetchAll();
                 if ($catalogs) {
-                    foreach ($catalogs as &$catalog) {
-                        $pStmt = $pdo->prepare("SELECT * FROM catalog_products WHERE catalog_id = :cid AND active = 1 ORDER BY sort_order ASC");
-                        $pStmt->execute(['cid' => $catalog['id']]);
-                        $catalog['products'] = $pStmt->fetchAll();
-                    }
+            foreach ($catalogs as &$catalog) {
+                $pStmt = $pdo->prepare("SELECT * FROM catalog_products WHERE catalog_id = :cid AND active = 1 ORDER BY sort_order ASC");
+                $pStmt->execute(['cid' => $catalog['id']]);
+                $catalog['products'] = $pStmt->fetchAll();
+            }
                 }
                 echo json_encode($catalogs ? $catalogs : []);
             } catch (PDOException $e) {
